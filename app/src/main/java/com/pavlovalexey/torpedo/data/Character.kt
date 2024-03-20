@@ -1,4 +1,4 @@
 package com.pavlovalexey.torpedo.data
 
 // класс для персонажа
-data class Character(val name: String, val avatar: Int)
+data class Character(val name: String)
