@@ -20,6 +20,6 @@ class DialogView @JvmOverloads constructor(
     }
 
     fun showNextDialog(dialog: Dialog) {
-        textView.text = "${dialog.characterName}: ${dialog.text}"
+        textView.text = "${dialog.characterName}${dialog.text}"
     }
 }

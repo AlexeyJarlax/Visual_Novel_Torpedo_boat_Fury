@@ -40,7 +40,8 @@ class SceneActivity : AppCompatActivity() {
             if (currentSceneIndex < sceneCounts) {
                 val scene = scenes[currentSceneIndex]
                 sceneView.showScene(scene)
-                dialogView.showNextDialog(scene.dialogs[currentSceneIndex])
+                dialogViewModel = DialogViewModel(scene.dialogs) // Обновляем ViewModel с новыми диалогами
+                dialogViewModel.getNextDialog()?.let { dialogView.showNextDialog(it) } // Показываем первый диалог из новой сцены
             } else {
                 // Если достигнут конец сцен в текущем акте, переходим к следующему акту
                 currentActIndex++
