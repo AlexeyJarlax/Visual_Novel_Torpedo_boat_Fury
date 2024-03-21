@@ -1,10 +1,10 @@
-package com.pavlovalexey.torpedo
+package com.pavlovalexey.torpedo.presentation
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
+import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.data.Scene
 
 class SceneView @JvmOverloads constructor(
@@ -14,20 +14,14 @@ class SceneView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private lateinit var imageView: ImageView
-    private lateinit var textView: TextView
 
     init {
         inflate(context, R.layout.view_scene, this)
         imageView = findViewById(R.id.imageView0)
-        textView = findViewById(R.id.textView0)
     }
 
     fun showScene(scene: Scene) {
-        imageView.setImageResource(scene.image)
-        // логика для воспроизведения музыки
-    }
-
-    fun showText(text: String) {
-        textView.text = text
+        imageView.setImageResource(scene.background)
+        // Добавьте логику для воспроизведения музыки, если требуется
     }
 }

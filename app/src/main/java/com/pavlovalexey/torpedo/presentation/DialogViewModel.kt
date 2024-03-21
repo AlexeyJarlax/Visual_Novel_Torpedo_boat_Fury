@@ -1,15 +1,17 @@
-package com.pavlovalexey.torpedo
+package com.pavlovalexey.torpedo.presentation
 
 import com.pavlovalexey.torpedo.data.Dialog
 
-class DialogViewModel(private val dialogs: List<Dialog>) {
+class DialogViewModel(
+    private val dialogs: List<Dialog>
+) {
     private var currentDialogIndex = 0
 
     fun getNextDialog(): Dialog? {
         if (currentDialogIndex < dialogs.size) {
-            val nextDialog = dialogs[currentDialogIndex]
+            val dialog = dialogs[currentDialogIndex]
             currentDialogIndex++
-            return nextDialog
+            return dialog
         }
         return null
     }

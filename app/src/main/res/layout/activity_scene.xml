@@ -5,13 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- SceneView для отображения сцены -->
-    <com.pavlovalexey.torpedo.SceneView
+    <com.pavlovalexey.torpedo.presentation.SceneView
         android:id="@+id/sceneView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <!-- DialogView для отображения диалогов -->
-    <com.pavlovalexey.torpedo.DialogView
+    <com.pavlovalexey.torpedo.presentation.DialogView
         android:id="@+id/dialogView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
