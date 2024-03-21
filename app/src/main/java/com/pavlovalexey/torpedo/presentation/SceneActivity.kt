@@ -3,11 +3,10 @@ package com.pavlovalexey.torpedo.presentation
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.pavlovalexey.torpedo.R
-import com.pavlovalexey.torpedo.data.Dialog
 import com.pavlovalexey.torpedo.domain.DialogNavigator
-import com.pavlovalexey.torpedo.presentation.Story.story
 
 class SceneActivity : AppCompatActivity(), DialogNavigator {
     private lateinit var mediaPlayer: MediaPlayer
@@ -16,6 +15,7 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
     private lateinit var dialogViewModel: DialogViewModel
     private lateinit var sceneView: SceneView
     private lateinit var dialogView: DialogView
+    private var dialogOptionsVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,17 +26,33 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
         mediaPlayer.isLooping = true
         mediaPlayer.start()
         showNextScene()
+        findViewById<View>(android.R.id.content).setOnClickListener {
+            showNextDialog()
+        }
+    }
+
+    private fun initDialogOptions() {
+        findViewById<Button>(R.id.button1).setOnClickListener {
+            onDialogOptionSelected("Провести ревизию вооружения")
+        }
+
+        findViewById<Button>(R.id.button2).setOnClickListener {
+            onDialogOptionSelected("Осмотреть команду")
+        }
     }
 
     private fun showNextScene() {
         if (currentActIndex < Story.plotActs.size) {
             val plotAct = Story.plotActs[currentActIndex]
             val scenes = plotAct.scenes
-            if (currentSceneIndex < scenes.size) {
+            val sceneCounts = scenes.size
+
+            if (currentSceneIndex < sceneCounts) {
                 val scene = scenes[currentSceneIndex]
                 sceneView.showScene(scene)
-                dialogViewModel = DialogViewModel(scene.dialogs, this)
+                dialogViewModel = DialogViewModel(scene.dialogs)
                 dialogViewModel.getNextDialog()?.let { dialogView.showDialog(it) }
+                currentSceneIndex++
             } else {
                 currentActIndex++
                 currentSceneIndex = 0
@@ -53,27 +69,16 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
     }
 
     override fun showNextDialog() {
-        // Implement the logic to show the next dialog
-        // You can call the necessary functions here
+        dialogViewModel.getNextDialog()?.let { dialogView.showDialog(it) }
     }
 
-    // Implement the function to handle the user's dialog option selection
     fun onDialogOptionSelected(option: String) {
-        // Example of handling different dialog options
-        when (option) {
-            "Провести ревизию вооружения" -> {
-                // Handle the case when the user chooses to inspect the weapons
-                // You can show the next dialog accordingly
-                dialogView.showDialog(Dialog(story, "Ревизия вооружения начата..."))
-            }
-            "Осмотреть команду" -> {
-                // Handle the case when the user chooses to inspect the team
-                // You can show the next dialog accordingly
-                dialogView.showDialog(Dialog(story, "Осмотр команды начат..."))
-            }
-            else -> {
-                // Handle other options if needed
-            }
+        if (dialogOptionsVisible) {
+            findViewById<View>(R.id.button1).visibility = View.INVISIBLE
+            findViewById<View>(R.id.button2).visibility = View.INVISIBLE
+            Story.processChoice(option, dialogViewModel)?.let { nextDialog ->
+                dialogView.showDialog(nextDialog)
+            } ?: showNextScene()
         }
     }
 }
