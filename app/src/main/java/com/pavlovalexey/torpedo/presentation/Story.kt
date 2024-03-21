@@ -1,27 +1,28 @@
-package com.pavlovalexey.torpedo
+package com.pavlovalexey.torpedo.presentation
 
+import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.data.Character
 import com.pavlovalexey.torpedo.data.Dialog
 import com.pavlovalexey.torpedo.data.PlotAct
 import com.pavlovalexey.torpedo.data.Scene
 
 object Story {
-    val characters = listOf(
-        Character(""), // расказчик
-        Character("Главный герой: "),
-        Character("Благоверная невеста: "),
-        Character("Боцман: "),
-        Character("Лекарь: "),
-        Character("Команда: ")
-    )
-
-    // ГЕРОИ
-    val story = "" // расказчик
-    val hero = ""
+    // Герои
+    val story = "" // рассказчик
+    val hero = "" // герой, тоже пустое поле
     val bride = "Благоверная невеста: "
     val boatswain = "Боцман: "
     val doc = "Лекарь: "
     val team = "Команда: "
+
+    val characters = listOf(
+        Character(story),
+        Character(hero),
+        Character(bride),
+        Character(boatswain),
+        Character(doc),
+        Character(team)
+    )
 
     val plotActs = listOf(
         PlotAct(
@@ -74,12 +75,23 @@ object Story {
                         Dialog(boatswain, "Добро пожаловать на борт, капитан!"),
                         Dialog(doc, "А мы то как рады! открывате ром мужики!"),
                         Dialog(team, "Отличное начало похода!"),
-                        )
+                        Dialog(boatswain, "Какие будут распоряжения, капитан?", listOf("Провести ревизию вооружения", "Осмотреть команду")),
+                        Dialog(story, "молчание"),
+                        Dialog(hero, "Провести ревизию вооружения"),
+                        Dialog(boatswain, "Хорошо!")
                     )
                 )
             )
         )
+    )
 
+    // Дополним объект Story функцией, которая обрабатывает выбор пользователя и возвращает следующий диалог
+    fun processChoice(option: String, dialogViewModel: DialogViewModel): Dialog? {
+        // Ваша логика обработки выбора и возврата следующего диалога
+        // Здесь можно использовать свитч или if-else для различных вариантов выбора
+        // В данном примере просто возвращаем следующий диалог после выбора одного из вариантов
+        return dialogViewModel.getNextDialog()
+    }
 
     private fun countScenesInActs(): IntArray {
         val sceneCounts = IntArray(plotActs.size)
