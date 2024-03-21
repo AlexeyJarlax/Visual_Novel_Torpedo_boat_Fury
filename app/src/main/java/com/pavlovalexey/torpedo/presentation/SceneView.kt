@@ -1,10 +1,10 @@
-package com.pavlovalexey.torpedo
+package com.pavlovalexey.torpedo.presentation
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
+import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.data.Scene
 
 class SceneView @JvmOverloads constructor(
@@ -21,7 +21,7 @@ class SceneView @JvmOverloads constructor(
     }
 
     fun showScene(scene: Scene) {
-        imageView.setImageResource(scene.image)
-        // логика для воспроизведения музыки
+        imageView.setImageResource(scene.background)
+        // Добавьте логику для воспроизведения музыки, если требуется
     }
 }
