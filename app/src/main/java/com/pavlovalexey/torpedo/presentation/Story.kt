@@ -85,6 +85,8 @@ object Story {
         )
     )
 
+    val sceneCounts = countScenesInActs()
+
     // Дополним объект Story функцией, которая обрабатывает выбор пользователя и возвращает следующий диалог
     fun processChoice(option: String, dialogViewModel: DialogViewModel): Dialog? {
         // Ваша логика обработки выбора и возврата следующего диалога
@@ -100,6 +102,4 @@ object Story {
         }
         return sceneCounts
     }
-
-    val sceneCounts = countScenesInActs()
 }

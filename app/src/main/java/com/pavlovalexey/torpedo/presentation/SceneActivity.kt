@@ -9,6 +9,7 @@ import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.domain.DialogNavigator
 
 class SceneActivity : AppCompatActivity(), DialogNavigator {
+
     private lateinit var mediaPlayer: MediaPlayer
     private var currentActIndex = 0
     private var currentSceneIndex = 0
@@ -34,9 +35,9 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
         if (currentActIndex < Story.plotActs.size) {
             val plotAct = Story.plotActs[currentActIndex]
             val scenes = plotAct.scenes
-            val sceneCounts = scenes.size
+            val sceneCounts = Story.sceneCounts
 
-            if (currentSceneIndex < sceneCounts) {
+            if (currentSceneIndex < sceneCounts[currentActIndex]) {
                 val scene = scenes[currentSceneIndex]
                 sceneView.showScene(scene)
                 dialogViewModel = DialogViewModel(scene.dialogs)
