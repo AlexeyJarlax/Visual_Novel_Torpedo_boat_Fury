@@ -1,6 +1,7 @@
 package com.pavlovalexey.torpedo.presentation
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -45,6 +46,31 @@ class DialogView @JvmOverloads constructor(
             button1.visibility = GONE
             button2.visibility = GONE
         }
+    }
+
+    fun showOptions(options: List<String>) {
+        val button1 = findViewById<Button>(R.id.button1)
+        val button2 = findViewById<Button>(R.id.button2)
+
+        button1.text = options[0]
+        button1.visibility = View.VISIBLE
+        button1.setOnClickListener {
+            (context as SceneActivity).onDialogOptionSelected(options[0])
+        }
+
+        button2.text = options[1]
+        button2.visibility = View.VISIBLE
+        button2.setOnClickListener {
+            (context as SceneActivity).onDialogOptionSelected(options[1])
+        }
+    }
+
+    fun clearOptions() {
+        val button1 = findViewById<Button>(R.id.button1)
+        val button2 = findViewById<Button>(R.id.button2)
+
+        button1.visibility = View.INVISIBLE
+        button2.visibility = View.INVISIBLE
     }
 
     // Метод для обработки выбора пользователя

@@ -15,7 +15,6 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
     private lateinit var dialogViewModel: DialogViewModel
     private lateinit var sceneView: SceneView
     private lateinit var dialogView: DialogView
-    private var dialogOptionsVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,16 +30,6 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
         }
     }
 
-    private fun initDialogOptions() {
-        findViewById<Button>(R.id.button1).setOnClickListener {
-            onDialogOptionSelected("Провести ревизию вооружения")
-        }
-
-        findViewById<Button>(R.id.button2).setOnClickListener {
-            onDialogOptionSelected("Осмотреть команду")
-        }
-    }
-
     private fun showNextScene() {
         if (currentActIndex < Story.plotActs.size) {
             val plotAct = Story.plotActs[currentActIndex]
@@ -51,8 +40,8 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
                 val scene = scenes[currentSceneIndex]
                 sceneView.showScene(scene)
                 dialogViewModel = DialogViewModel(scene.dialogs)
-                dialogViewModel.getNextDialog()?.let { dialogView.showDialog(it) }
-                currentSceneIndex++
+                showNextDialog()
+                dialogView.showDialog(scene.dialogs[currentSceneIndex])
             } else {
                 currentActIndex++
                 currentSceneIndex = 0
@@ -69,16 +58,29 @@ class SceneActivity : AppCompatActivity(), DialogNavigator {
     }
 
     override fun showNextDialog() {
-        dialogViewModel.getNextDialog()?.let { dialogView.showDialog(it) }
+        dialogViewModel.getNextDialog()?.let { dialog ->
+            if (dialog.choices?.isNotEmpty() == true) {
+                dialog.choices?.let { dialogView.showOptions(it) }
+            } else {
+                dialogView.showDialog(dialog)
+            }
+        } ?: run {
+            currentSceneIndex++
+            showNextScene()
+        }
     }
 
     fun onDialogOptionSelected(option: String) {
-        if (dialogOptionsVisible) {
-            findViewById<View>(R.id.button1).visibility = View.INVISIBLE
-            findViewById<View>(R.id.button2).visibility = View.INVISIBLE
-            Story.processChoice(option, dialogViewModel)?.let { nextDialog ->
-                dialogView.showDialog(nextDialog)
-            } ?: showNextScene()
+        dialogView.clearOptions()
+        Story.processChoice(option, dialogViewModel)?.let { nextDialog ->
+            dialogView.showDialog(nextDialog)
+        } ?: run {
+            showNextDialog()
         }
+    }
+
+    fun onSkipButtonClicked() {
+        // Handle skip button click event
+        showNextDialog()
     }
 }
