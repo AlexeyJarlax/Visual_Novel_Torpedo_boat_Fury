@@ -8,8 +8,11 @@ import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.repository.GameRepository
 
-class GameViewModel(private val gameRepository: GameRepository) : ViewModel() {
-    private var currentDialogueIndex = 0
+class GameViewModel(val gameRepository: GameRepository) : ViewModel() {
+    private val _currentDialogueIndex = MutableLiveData(0)
+    val currentDialogueIndex: LiveData<Int>
+        get() = _currentDialogueIndex
+
     private val _currentScene = MutableLiveData<Scene>()
     val currentScene: LiveData<Scene>
         get() = _currentScene
@@ -24,28 +27,25 @@ class GameViewModel(private val gameRepository: GameRepository) : ViewModel() {
     }
 
     fun selectOption(optionIndex: Int) {
-        val selectedOption = currentDialogue.value?.options?.getOrNull(optionIndex)
+        val currentDialogueIndex = _currentDialogueIndex.value ?: 0
+        val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
         selectedOption?.let { option ->
             val nextDialogueIndex = option.nextDialogueIndex
+            val currentResource = _resources.value ?: Resource(0, 0, 0)
             _resources.value = Resource(
-                _resources.value?.rubles?.plus(option.resourceEffect.rubles) ?: 0,
-                _resources.value?.fame?.plus(option.resourceEffect.fame) ?: 0,
-                _resources.value?.teamLoyalty?.plus(option.resourceEffect.teamLoyalty) ?: 0
+                currentResource.rubles + option.resourceEffect.rubles,
+                currentResource.fame + option.resourceEffect.fame,
+                currentResource.teamLoyalty + option.resourceEffect.teamLoyalty
             )
             _currentScene.value = gameRepository.getSceneByDialogueIndex(nextDialogueIndex)
+            _currentDialogueIndex.value = nextDialogueIndex
         }
     }
 
-    private var currentDialogue: Dialogue = gameRepository.getInitialDialogue()
-
-//    fun getCurrentDialogue(): Dialogue {
-//        return currentDialogue
-//    }
-
     // Функция для переключения на следующий диалог без выбора пользователя
-//    fun goToNextDialogue() {
-//        currentDialogueIndex++
-//        currentDialogue = gameRepository.getDialogueByIndex(currentDialogueIndex)
-//            ?: throw IllegalStateException("No dialogue found for index: $currentDialogueIndex")
-//    }
+    fun goToNextDialogue() {
+        val currentDialogueIndex = _currentDialogueIndex.value ?: 0
+        _currentDialogueIndex.value = currentDialogueIndex + 1
+        _currentScene.value = gameRepository.getSceneByDialogueIndex(currentDialogueIndex + 1)
+    }
 }
