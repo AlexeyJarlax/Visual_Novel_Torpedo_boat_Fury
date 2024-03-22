@@ -1,26 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/dialogueTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dialogue Text"
-        android:textSize="20sp"
-        android:layout_centerInParent="true"
-        android:gravity="center"/>
-
+    <!-- Верхняя панель с ресурсами -->
     <LinearLayout
-        android:id="@+id/optionsLayout"
+        android:id="@+id/resourcesLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp">
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Иконки и количество ресурсов -->
+        <TextView
+            android:id="@+id/rublesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="&#129689;"
+            android:textSize="24sp"
+            android:drawablePadding="8dp"/>
+
+        <TextView
+            android:id="@+id/fameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏆"
+            android:textSize="24sp"
+            android:drawablePadding="8dp"/>
+
+        <TextView
+            android:id="@+id/teamLoyaltyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🚩"
+            android:textSize="24sp"
+            android:drawablePadding="8dp"/>
+
     </LinearLayout>
+
+    <!-- Контейнер для отображения фона сцены -->
+    <FrameLayout
+        android:id="@+id/sceneContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/resourcesLayout">
+
+        <ImageView
+            android:id="@+id/sceneImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+    </FrameLayout>
 
 </RelativeLayout>

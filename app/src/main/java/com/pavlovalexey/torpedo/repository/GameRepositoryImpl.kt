@@ -1,10 +1,19 @@
 package com.pavlovalexey.torpedo.repository
 
+import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
+import com.pavlovalexey.torpedo.model.Scene
 
 class GameRepositoryImpl : GameRepository {
+
+    private val scenes: List<Scene> = listOf(
+        Scene(R.drawable.scen_spb1, "Сцена 1"),
+        Scene(R.drawable.scen_spb2, "Сцена 2"),
+        Scene(R.drawable.scen_alex3, "Сцена 3"),
+
+    )
 
     private val dialogues: List<Pair<Int, Dialogue>> = listOf(
         Pair(0, Dialogue(
@@ -29,6 +38,7 @@ class GameRepositoryImpl : GameRepository {
         )),
         Pair(1, Dialogue(
             text = "Начало игры в режиме Историческое повествование (повествование в игре и выбор случайных событий в процессе игры приближены к историческим событиям и реалиям 1905 года)",
+
             options = listOf(
                 Option(
                     text = "далее",
@@ -123,11 +133,19 @@ class GameRepositoryImpl : GameRepository {
         // Добавляем пары индекса и диалога
     )
 
-    override fun getInitialDialogue(): Dialogue {
+    fun getInitialDialogue(): Dialogue {
         return dialogues.firstOrNull()?.second ?: throw IllegalStateException("No dialogues available")
     }
 
-    override fun getDialogueByIndex(index: Int): Dialogue? {
+    fun getDialogueByIndex(index: Int): Dialogue? {
         return dialogues.find { it.first == index }?.second
+    }
+
+    override fun getInitialScene(): Scene {
+        return scenes.first()
+    }
+
+    override fun getSceneByDialogueIndex(dialogueIndex: Int): Scene {
+        return scenes.getOrNull(dialogueIndex) ?: throw IllegalStateException("Scene not found for dialogue index: $dialogueIndex")
     }
 }
