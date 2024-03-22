@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Playlist Maker</string>
-    <string name="torpedo">Playlist Maker</string>
+    <string name="app_name">Torpedo</string>
+    <string name="torpedo">Torpedo</string>
     <string name="search">Search</string>
     <string name="button_media_lib">Mediateka</string>
     <string name="button_settings">Settings</string>
@@ -13,7 +13,7 @@
     <string name="share_app_text">Try this app that I wrote furiously: https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="share_app_title">Share app</string>
     <string name="support_email">mailto:al3ksei.pav@yandex.ru</string>
-    <string name="support_email_subject">Message to the developers and developers of the Playlist Maker app</string>
+    <string name="support_email_subject">Message to the developers and developers of the Torpedo app</string>
     <string name="support_email_text">Thanks to the developers and developers for the cool app!</string>
     <string name="user_agreement_url">https://yandex.ru/legal/practicum_offer/</string>
     <string name="heading_search_history_list_view">Search string query history</string>
