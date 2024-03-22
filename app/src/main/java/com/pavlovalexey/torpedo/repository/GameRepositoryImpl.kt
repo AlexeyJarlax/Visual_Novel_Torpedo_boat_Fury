@@ -6,105 +6,128 @@ import com.pavlovalexey.torpedo.model.Resource
 
 class GameRepositoryImpl : GameRepository {
 
-    private val dialogues: List<Dialogue> = listOf(
-        Dialogue(
-            text = "Привет! Это начало игры.",
+    private val dialogues: List<Pair<Int, Dialogue>> = listOf(
+        Pair(0, Dialogue(
+            text = "Выберите режим игры",
             options = listOf(
                 Option(
-                    text = "Ответ 1",
+                    text = "Историческое повествование",
                     nextDialogueIndex = 1,
-                    resourceEffect = Resource(1, 0, 0)
+                    resourceEffect = Resource(10, 10, 10)
                 ),
                 Option(
-                    text = "Ответ 2",
+                    text = "Альтернативная история",
                     nextDialogueIndex = 2,
-                    resourceEffect = Resource(0, 1, 0)
+                    resourceEffect = Resource(10, 10, 10)
                 ),
                 Option(
-                    text = "Ответ 3",
+                    text = "Борьба за выживание",
                     nextDialogueIndex = 3,
-                    resourceEffect = Resource(0, 0, 1)
+                    resourceEffect = Resource(7, 7, 7)
                 )
             )
-        ),
-        Dialogue(
-            text = "Диалог 2",
-            options = listOf(
-                // опции для второго диалога
-            )
-        ),
-        Dialogue(
-            text = "Диалог 3",
-            options = listOf(
-                // опции для третьего диалога
-            )
-        ),
-        Dialogue(
-            text = "Подготовка к морскому походу",
+        )),
+        Pair(1, Dialogue(
+            text = "Начало игры в режиме Историческое повествование (повествование в игре и выбор случайных событий в процессе игры приближены к историческим событиям и реалиям 1905 года)",
             options = listOf(
                 Option(
-                    text = "Проверить состояние корабля",
+                    text = "далее",
                     nextDialogueIndex = 4,
-                    resourceEffect = Resource(0, 0, 0) // Пока без эффекта на ресурсы
+                    resourceEffect = Resource(0, 0, 0)
                 ),
                 Option(
-                    text = "Провести инструктаж экипажа",
-                    nextDialogueIndex = 5,
-                    resourceEffect = Resource(0, 0, 0) // Пока без эффекта на ресурсы
-                ),
-                Option(
-                    text = "Подготовить запасы провизии",
-                    nextDialogueIndex = 6,
-                    resourceEffect = Resource(0, 0, 0) // Пока без эффекта на ресурсы
+                    text = "назад",
+                    nextDialogueIndex = 0,
+                    resourceEffect = Resource(0, 0, 0)
                 )
             )
-        ),
-        Dialogue(
-            text = "Проверка состояния корабля: Все системы работают исправно. Готовы к отплытию!",
-            options = listOf(
-                // опции после проверки корабля
-            )
-        ),
-        Dialogue(
-            text = "Инструктаж экипажа: Экипаж получил инструктаж. Все знают свои обязанности.",
-            options = listOf(
-                // опции после инструктажа
-            )
-        ),
-        Dialogue(
-            text = "Подготовка запасов провизии: Провизия погружена на борт и готова к использованию.",
-            options = listOf(
-                // опции после подготовки провизии
-            )
-        ),
-        Dialogue(
-            text = "Боцман: Капитан, какие приказания по распределению экипажа на борту?",
+        )),
+        Pair(2, Dialogue(
+            text = "Начало игры в режиме Альтернативная история (повествование в игре и выбор случайных событий в процессе игры могут привести к неожиданным результатам, содержит элементы фантастики)",
             options = listOf(
                 Option(
-                    text = "Распределить по привычному графику",
-                    nextDialogueIndex = 7,
-                    resourceEffect = Resource(0, 0, 0) // Пока без эффекта на ресурсы
+                    text = "далее",
+                    nextDialogueIndex = 4,
+                    resourceEffect = Resource(0, 0, 0)
                 ),
                 Option(
-                    text = "Изменить распределение сил в зависимости от задач",
-                    nextDialogueIndex = 8,
-                    resourceEffect = Resource(0, 0, 0) // Пока без эффекта на ресурсы
-                ),
-                Option(
-                    text = "Провести дополнительный инструктаж по боевым действиям",
-                    nextDialogueIndex = 9,
-                    resourceEffect = Resource(0, 0, 0) // Пока без эффекта на ресурсы
+                    text = "назад",
+                    nextDialogueIndex = 0,
+                    resourceEffect = Resource(0, 0, 0)
                 )
             )
-        ),
-        // Здесь можно добавить дополнительные диалоги для различных сценариев
+        )),
+        Pair(3, Dialogue(
+            text = "Начало игры в режиме Борьба за выживание (режим игры с повышенной сложностью; повествование в игре и выбор случайных событий в процессе игры могут привести к неожиданным результатам, содержит элементы фантастики)",
+            options = listOf(
+                Option(
+                    text = "далее",
+                    nextDialogueIndex = 4,
+                    resourceEffect = Resource(0, 0, 0)
+                ),
+                Option(
+                    text = "назад",
+                    nextDialogueIndex = 0,
+                    resourceEffect = Resource(0, 0, 0)
+                )
+            )
+        )),
+        Pair(4, Dialogue(
+            text = "Лучики солнца бъют через занавеску, играя на вашем лице...",
+            options = listOf()
+        )),
+        Pair(5, Dialogue(
+            text = "Введение...",
+            options = listOf()
+        )),
+        Pair(6, Dialogue(
+            text = "Введение....",
+            options = listOf()
+        )),
+        Pair(7, Dialogue(
+            text = "Введение.....",
+            options = listOf()
+        )),
+        Pair(8, Dialogue(
+            text = "Введение......",
+            options = listOf()
+        )),
+        Pair(9, Dialogue(
+            text = "Введение........",
+            options = listOf()
+        )),
+        Pair(10, Dialogue(
+            text = "Какие будут первые распоряжения, капитан?",
+            options = listOf(
+                Option(
+                    text = "Плывём грабить корованы!",
+                    nextDialogueIndex = 11,
+                    resourceEffect = Resource(2, 0, 0)
+                ),
+                Option(
+                    text = "Плывём поможем царевичу!",
+                    nextDialogueIndex = 11,
+                    resourceEffect = Resource(0, 2, 0)
+                ),
+                Option(
+                    text = "Пусть команда отдохнёт перед походом",
+                    nextDialogueIndex = 11,
+                    resourceEffect = Resource(0, 0, 2)
+                )
+            )
+        )),
+        Pair(11, Dialogue(
+            text = "Конец игры",
+            options = listOf()
+        )),
+        // Добавляем пары индекса и диалога
     )
 
     override fun getInitialDialogue(): Dialogue {
-        return dialogues.firstOrNull() ?: throw IllegalStateException("No dialogues available")
+        return dialogues.firstOrNull()?.second ?: throw IllegalStateException("No dialogues available")
     }
 
     override fun getDialogueByIndex(index: Int): Dialogue? {
-        return dialogues.getOrNull(index)
+        return dialogues.find { it.first == index }?.second
     }
 }
