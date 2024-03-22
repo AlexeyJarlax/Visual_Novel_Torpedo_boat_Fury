@@ -24,11 +24,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/horizontal_gradient"
-        android:padding="16dp">
+        android:padding="0dp">
 
         <!-- Иконки и количество ресурсов -->
         <TextView
             android:id="@+id/rublesTextView"
+            style="@style/ErrorButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="&#129689;"
@@ -37,6 +38,7 @@
 
         <TextView
             android:id="@+id/fameTextView"
+            style="@style/ErrorButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🏆"
@@ -45,6 +47,7 @@
 
         <TextView
             android:id="@+id/teamLoyaltyTextView"
+            style="@style/ErrorButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🚩"

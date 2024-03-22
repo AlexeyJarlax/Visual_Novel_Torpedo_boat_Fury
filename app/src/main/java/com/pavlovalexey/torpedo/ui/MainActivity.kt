@@ -60,6 +60,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dialogueTextView: TextView
     private lateinit var optionsLayout: LinearLayout
     private lateinit var sceneImageView: ImageView
+    private lateinit var rublesTextView: TextView
+    private lateinit var fameTextView: TextView
+    private lateinit var teamLoyaltyTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +71,9 @@ class MainActivity : AppCompatActivity() {
         dialogueTextView = findViewById(R.id.dialogueTextView)
         optionsLayout = findViewById(R.id.optionsLayout)
         sceneImageView = findViewById(R.id.sceneImageView)
+        rublesTextView = findViewById(R.id.rublesTextView)
+        fameTextView = findViewById(R.id.fameTextView)
+        teamLoyaltyTextView = findViewById(R.id.teamLoyaltyTextView)
 
         gameViewModel.currentScene.observe(this, Observer { scene ->
             sceneImageView.setImageResource(scene.background)
@@ -99,6 +105,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 optionsLayout.addView(optionButtonView)
             }
+        }
+
+        // Установка значений ресурсов
+        val resources = gameViewModel.resources.value
+        resources?.let {
+            rublesTextView.text = getString(R.string.currency_format, "₽", it.rubles)
+            fameTextView.text = getString(R.string.symbol_format, "🏆", it.fame)
+            teamLoyaltyTextView.text = getString(R.string.symbol_format, "🚩", it.teamLoyalty)
         }
     }
 }
