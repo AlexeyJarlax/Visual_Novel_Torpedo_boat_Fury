@@ -409,6 +409,12 @@ class GameRepositoryImpl : GameRepository {
             )
         ),
 
+
+        /** ГЛАВА 2 ГУЛЛЬСКИЙ ИНЦИДЕНТ*/
+
+
+
+
         /** ГЛАВА 3 НЕОБЫЧНАЯ КНИГА: КАПИТАЛ*/
         Pair(
             100, Dialogue(
