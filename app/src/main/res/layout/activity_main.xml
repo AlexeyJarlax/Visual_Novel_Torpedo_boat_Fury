@@ -22,37 +22,30 @@
         android:id="@+id/resourcesLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/horizontal_gradient"
+        android:orientation="horizontal"
         android:padding="0dp">
 
-        <!-- Иконки и количество ресурсов -->
         <TextView
             android:id="@+id/rublesTextView"
-            style="@style/ErrorButtons"
+            style="@style/Resurses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="&#129689;"
-            android:textSize="24sp"
-            android:drawablePadding="8dp" />
+            android:text="₽" />
 
         <TextView
             android:id="@+id/fameTextView"
-            style="@style/ErrorButtons"
+            style="@style/Resurses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🏆"
-            android:textSize="24sp"
-            android:drawablePadding="8dp" />
+            android:text="🏆" />
 
         <TextView
             android:id="@+id/teamLoyaltyTextView"
-            style="@style/ErrorButtons"
+            style="@style/Resurses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🚩"
-            android:textSize="24sp"
-            android:drawablePadding="8dp" />
+            android:text="🚩" />
 
     </LinearLayout>
 
@@ -67,8 +60,7 @@
         android:layout_marginStart="6dp"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="6dp"
-        android:orientation="horizontal">
-    </LinearLayout>
+        android:orientation="horizontal"></LinearLayout>
 
     <TextView
         android:id="@+id/dialogueTextView"
@@ -78,6 +70,7 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/horizontal_gradient"
         android:gravity="center"
+        android:padding="@dimen/dp6"
         android:shadowColor="#000000"
         android:shadowDx="2"
         android:shadowDy="2"

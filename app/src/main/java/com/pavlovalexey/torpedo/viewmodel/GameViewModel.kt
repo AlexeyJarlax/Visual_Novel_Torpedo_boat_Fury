@@ -37,15 +37,28 @@ class GameViewModel(val gameRepository: GameRepository) : ViewModel() {
                 currentResource.fame + option.resourceEffect.fame,
                 currentResource.teamLoyalty + option.resourceEffect.teamLoyalty
             )
-            _currentScene.value = gameRepository.getSceneByDialogueIndex(nextDialogueIndex)
+            // Получаем следующую сцену для диалога
+            val nextScene = gameRepository.getDialogueByIndex(nextDialogueIndex)?.scene
+            // Проверяем, отличается ли следующая сцена от текущей
+            nextScene?.let {
+                if (it != _currentScene.value) {
+                    _currentScene.value = it
+                }
+            }
             _currentDialogueIndex.value = nextDialogueIndex
         }
     }
 
-    // Функция для переключения на следующий диалог без выбора пользователя
     fun goToNextDialogue() {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         _currentDialogueIndex.value = currentDialogueIndex + 1
-        _currentScene.value = gameRepository.getSceneByDialogueIndex(currentDialogueIndex + 1)
+        // Получаем следующую сцену для диалога
+        val nextScene = gameRepository.getDialogueByIndex(currentDialogueIndex + 1)?.scene
+        // Проверяем, отличается ли следующая сцена от текущей
+        nextScene?.let {
+            if (it != _currentScene.value) {
+                _currentScene.value = it
+            }
+        }
     }
 }
