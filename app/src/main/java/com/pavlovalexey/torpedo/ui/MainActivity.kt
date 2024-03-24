@@ -19,7 +19,7 @@ package com.pavlovalexey.torpedo.ui
  *      - Содержит текст, индекс следующего диалога и эффекты ресурсов.
  *
  *** Ресурсы (Resource): Представляет объект-ресурсы.
- *      - Включает в себя Царские рубли, славу и лояльность команды.
+ *      - Включает в себя Царские рубли, славу, лояльность команды, водку, тяжелое автоматическое оружие.
  *
  *** Сцена (Scene): Представляет объект-сцену. Это изображение и описание сцены, отображаемой на экране за диалогами.
  *
@@ -63,6 +63,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rublesTextView: TextView
     private lateinit var fameTextView: TextView
     private lateinit var teamLoyaltyTextView: TextView
+    private lateinit var vodkaTextView: TextView
+    private lateinit var maximTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,8 @@ class MainActivity : AppCompatActivity() {
         rublesTextView = findViewById(R.id.rublesTextView)
         fameTextView = findViewById(R.id.fameTextView)
         teamLoyaltyTextView = findViewById(R.id.teamLoyaltyTextView)
+        vodkaTextView = findViewById(R.id.vodkaTextView)
+        maximTextView = findViewById(R.id.maximTextView)
 
         gameViewModel.currentScene.observe(this, Observer { scene ->
             sceneImageView.setImageResource(scene.background)
@@ -113,6 +117,8 @@ class MainActivity : AppCompatActivity() {
             rublesTextView.text = getString(R.string.currency_format, "₽", it.rubles)
             fameTextView.text = getString(R.string.symbol_format, "🏆", it.fame)
             teamLoyaltyTextView.text = getString(R.string.symbol_format, "🚩", it.teamLoyalty)
+            vodkaTextView.text = getString(R.string.symbol_format, "🍶", it.vodka)
+            maximTextView.text = getString(R.string.symbol_format, "💂🏼", it.maxim)
         }
     }
 }
