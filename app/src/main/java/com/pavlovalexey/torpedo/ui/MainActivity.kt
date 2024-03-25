@@ -103,7 +103,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // обработка кнопок с выбором ответа
     private fun updateUI(currentDialogueIndex: Int) {
         val currentDialogue = gameViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
 
@@ -124,10 +123,18 @@ class MainActivity : AppCompatActivity() {
             currentDialogue.text // Если "::" нет, просто используем весь текст без подчеркивания и голубого цвета
         }
 
-        // Установка отформатированного текста на TextView
         dialogueTextView.text = formattedText
 
-        // Остальной код обновления интерфейса
+        // Установка значений ресурсов
+        val resources = gameViewModel.resources.value
+        resources?.let {
+            rublesTextView.text = getString(R.string.currency_format, "₽", it.rubles)
+            fameTextView.text = getString(R.string.symbol_format, "🏆", it.fame)
+            teamLoyaltyTextView.text = getString(R.string.symbol_format, "🚩", it.teamLoyalty)
+            vodkaTextView.text = getString(R.string.symbol_format, "🍶", it.vodka)
+            maximTextView.text = getString(R.string.symbol_format, "💂🏼", it.maxim)
+        }
+
         optionsLayout.removeAllViews()
         currentDialogue.options.forEachIndexed { index, option ->
             val optionButtonView = LayoutInflater.from(this).inflate(R.layout.option_button, optionsLayout, false)
