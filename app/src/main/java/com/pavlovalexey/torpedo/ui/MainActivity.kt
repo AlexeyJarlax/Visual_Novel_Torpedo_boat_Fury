@@ -40,7 +40,14 @@ package com.pavlovalexey.torpedo.ui
  *      если дочитал/ла до сюда то ты супер-красавчик
  */
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -48,6 +55,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.google.android.material.button.MaterialButton
 import com.pavlovalexey.torpedo.R
@@ -95,10 +103,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // обработка кнопок с выбором ответа
     private fun updateUI(currentDialogueIndex: Int) {
         val currentDialogue = gameViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
-        dialogueTextView.text = currentDialogue.text
+
+        // Разделение текста диалога на части до и после "::"
+        val parts = currentDialogue.text.split("::")
+        val formattedText = if (parts.size == 2) {
+            val underlinedText = parts[0] // Текст, который нужно подчеркнуть
+            val remainingText = parts[1] // Оставшаяся часть текста
+
+            // Формирование отформатированного текста с подчеркнутой и голубой частью
+            SpannableStringBuilder().apply {
+                append(underlinedText)
+                setSpan(UnderlineSpan(), 0, underlinedText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(ForegroundColorSpan(ContextCompat.getColor(this@MainActivity, R.color.yp_blue_light)), 0, underlinedText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                append(remainingText)
+            }
+        } else {
+            currentDialogue.text // Если "::" нет, просто используем весь текст без подчеркивания и голубого цвета
+        }
+
+        dialogueTextView.text = formattedText
+
+        // Установка значений ресурсов
+        val resources = gameViewModel.resources.value
+        resources?.let {
+            rublesTextView.text = getString(R.string.currency_format, "₽", it.rubles)
+            fameTextView.text = getString(R.string.symbol_format, "🏆", it.fame)
+            teamLoyaltyTextView.text = getString(R.string.symbol_format, "🚩", it.teamLoyalty)
+            vodkaTextView.text = getString(R.string.symbol_format, "🍶", it.vodka)
+            maximTextView.text = getString(R.string.symbol_format, "💂🏼", it.maxim)
+        }
+
         optionsLayout.removeAllViews()
         currentDialogue.options.forEachIndexed { index, option ->
             val optionButtonView = LayoutInflater.from(this).inflate(R.layout.option_button, optionsLayout, false)
@@ -109,16 +145,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 optionsLayout.addView(optionButtonView)
             }
-        }
-
-        // Установка значений ресурсов
-        val resources = gameViewModel.resources.value
-        resources?.let {
-            rublesTextView.text = getString(R.string.currency_format, "₽", it.rubles)
-            fameTextView.text = getString(R.string.symbol_format, "🏆", it.fame)
-            teamLoyaltyTextView.text = getString(R.string.symbol_format, "🚩", it.teamLoyalty)
-            vodkaTextView.text = getString(R.string.symbol_format, "🍶", it.vodka)
-            maximTextView.text = getString(R.string.symbol_format, "💂🏼", it.maxim)
         }
     }
 }
