@@ -40,6 +40,9 @@ package com.pavlovalexey.torpedo.ui
  *      если дочитал/ла до сюда то ты супер-красавчик
  */
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
@@ -61,6 +64,8 @@ import com.google.android.material.button.MaterialButton
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.viewmodel.GameViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import android.view.animation.ScaleAnimation
+import androidx.core.view.doOnLayout
 
 class MainActivity : AppCompatActivity() {
     private val gameViewModel: GameViewModel by viewModel()
@@ -73,6 +78,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var teamLoyaltyTextView: TextView
     private lateinit var vodkaTextView: TextView
     private lateinit var maximTextView: TextView
+    private lateinit var capitalTextView: TextView
+    private lateinit var necronomiconTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +93,8 @@ class MainActivity : AppCompatActivity() {
         teamLoyaltyTextView = findViewById(R.id.teamLoyaltyTextView)
         vodkaTextView = findViewById(R.id.vodkaTextView)
         maximTextView = findViewById(R.id.maximTextView)
+        capitalTextView = findViewById(R.id.capitalTextView)
+        necronomiconTextView = findViewById(R.id.necronomiconTextView)
 
         gameViewModel.currentScene.observe(this, Observer { scene ->
             sceneImageView.setImageResource(scene.background)
@@ -103,8 +112,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun animateTextChange(textView: TextView, newText: String) {
+        if (textView.text.toString() != newText) {
+            val animator = ValueAnimator.ofFloat(1f, 2f)
+            animator.duration = 400 // Устанавливаем длительность анимации увеличения
+
+            animator.addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Float
+                textView.scaleX = animatedValue
+                textView.scaleY = animatedValue
+                if (animatedValue == 2f) {
+                    textView.text = newText
+                }
+            }
+
+            val reverseAnimator = ValueAnimator.ofFloat(2f, 1f)
+            reverseAnimator.duration = 400 // Устанавливаем длительность анимации уменьшения
+
+            reverseAnimator.addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Float
+                textView.scaleX = animatedValue
+                textView.scaleY = animatedValue
+            }
+
+            animator.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    reverseAnimator.start() // После завершения анимации увеличения запускаем анимацию уменьшения
+                }
+            })
+
+            animator.start()
+        }
+    }
+
     private fun updateUI(currentDialogueIndex: Int) {
-        val currentDialogue = gameViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
+        val currentDialogue =
+            gameViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
 
         // Разделение текста диалога на части до и после "::"
         val parts = currentDialogue.text.split("::")
@@ -116,7 +159,14 @@ class MainActivity : AppCompatActivity() {
             SpannableStringBuilder().apply {
                 append(underlinedText)
                 setSpan(UnderlineSpan(), 0, underlinedText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                setSpan(ForegroundColorSpan(ContextCompat.getColor(this@MainActivity, R.color.yp_blue_light)), 0, underlinedText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(
+                    ForegroundColorSpan(
+                        ContextCompat.getColor(
+                            this@MainActivity,
+                            R.color.yp_blue_light
+                        )
+                    ), 0, underlinedText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
                 append(remainingText)
             }
         } else {
@@ -128,16 +178,59 @@ class MainActivity : AppCompatActivity() {
         // Установка значений ресурсов
         val resources = gameViewModel.resources.value
         resources?.let {
-            rublesTextView.text = getString(R.string.currency_format, "₽", it.rubles)
-            fameTextView.text = getString(R.string.symbol_format, "🏆", it.fame)
-            teamLoyaltyTextView.text = getString(R.string.symbol_format, "🚩", it.teamLoyalty)
-            vodkaTextView.text = getString(R.string.symbol_format, "🍶", it.vodka)
-            maximTextView.text = getString(R.string.symbol_format, "💂🏼", it.maxim)
+            if (it.rubles != 0) {
+                animateTextChange(rublesTextView, getString(R.string.currency_format, "₽", it.rubles))
+            } else {
+                rublesTextView.text = ""
+            }
+
+            if (it.fame != 0) {
+                animateTextChange(fameTextView, getString(R.string.symbol_format, "🏆", it.fame))
+            } else {
+                fameTextView.text = ""
+            }
+
+            if (it.teamLoyalty != 0) {
+                animateTextChange(
+                    teamLoyaltyTextView,
+                    getString(R.string.symbol_format, "🚩", it.teamLoyalty)
+                )
+            } else {
+                teamLoyaltyTextView.text = ""
+            }
+
+            if (it.vodka != 0) {
+                animateTextChange(vodkaTextView, getString(R.string.symbol_format, "🍶", it.vodka))
+            } else {
+                vodkaTextView.text = ""
+            }
+
+            if (it.maxim != 0) {
+                animateTextChange(maximTextView, getString(R.string.symbol_format, "💥", it.maxim))
+            } else {
+                maximTextView.text = ""
+            }
+
+            if (it.capital != 0) {
+                animateTextChange(capitalTextView, getString(R.string.symbol_format, "☭", it.capital))
+            } else {
+                capitalTextView.text = ""
+            }
+
+            if (it.necronomicon != 0) {
+                animateTextChange(
+                    necronomiconTextView,
+                    getString(R.string.symbol_format, "🐙", it.necronomicon)
+                )
+            } else {
+                necronomiconTextView.text = ""
+            }
         }
 
         optionsLayout.removeAllViews()
         currentDialogue.options.forEachIndexed { index, option ->
-            val optionButtonView = LayoutInflater.from(this).inflate(R.layout.option_button, optionsLayout, false)
+            val optionButtonView =
+                LayoutInflater.from(this).inflate(R.layout.option_button, optionsLayout, false)
             if (optionButtonView is MaterialButton) {
                 optionButtonView.text = option.text
                 optionButtonView.setOnClickListener {
