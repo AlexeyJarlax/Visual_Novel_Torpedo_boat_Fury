@@ -4,6 +4,8 @@ data class Resource(
     val rubles: Int,
     val fame: Int,
     val teamLoyalty: Int,
-    val capital: Boolean = false, // сценарий Карл Маркс
-    val necronomicon: Boolean = false // сценарий Карл Маркс
+    val vodka: Int,
+    val maxim: Int,
+    val capital: Int, // книги по сценарию Революция
+    val necronomicon: Int // книги по сценарию Некрономикон
 )

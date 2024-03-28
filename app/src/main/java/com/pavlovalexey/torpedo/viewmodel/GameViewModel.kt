@@ -23,19 +23,24 @@ class GameViewModel(val gameRepository: GameRepository) : ViewModel() {
 
     init {
         _currentScene.value = gameRepository.getInitialScene()
-        _resources.value = Resource(0, 0, 0)
+        _resources.value = Resource(0, 0, 0, 0, 0, 0, 0)
     }
 
     fun selectOption(optionIndex: Int) {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
-        val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
+        val selectedOption =
+            gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
         selectedOption?.let { option ->
             val nextDialogueIndex = option.nextDialogueIndex
-            val currentResource = _resources.value ?: Resource(0, 0, 0)
+            val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0)
             _resources.value = Resource(
                 currentResource.rubles + option.resourceEffect.rubles,
                 currentResource.fame + option.resourceEffect.fame,
-                currentResource.teamLoyalty + option.resourceEffect.teamLoyalty
+                currentResource.teamLoyalty + option.resourceEffect.teamLoyalty,
+                currentResource.vodka + option.resourceEffect.vodka,
+                currentResource.maxim + option.resourceEffect.maxim,
+                currentResource.capital + option.resourceEffect.capital,
+                currentResource.necronomicon + option.resourceEffect.necronomicon
             )
             // Получаем следующую сцену для диалога
             val nextScene = gameRepository.getDialogueByIndex(nextDialogueIndex)?.scene
