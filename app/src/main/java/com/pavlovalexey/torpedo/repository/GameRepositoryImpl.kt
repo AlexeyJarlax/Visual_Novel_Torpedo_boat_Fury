@@ -2,24 +2,26 @@ package com.pavlovalexey.torpedo.repository
 
 /** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
 
+import android.content.Context
 import com.pavlovalexey.torpedo.R
-import com.pavlovalexey.torpedo.model.Characters
 import com.pavlovalexey.torpedo.model.Characters.admiral
 import com.pavlovalexey.torpedo.model.Characters.bookseller
-//import com.pavlovalexey.torpedo.model.Characters.novikov
 import com.pavlovalexey.torpedo.model.Characters.paramonov
 import com.pavlovalexey.torpedo.model.Characters.reztsov
 import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.UnderlineSpan
 import com.pavlovalexey.torpedo.model.Characters.bumblebee
 import com.pavlovalexey.torpedo.model.Characters.novikov
 
-class GameRepositoryImpl : GameRepository {
+class GameRepositoryImpl(private val context: Context) : GameRepository {
+
+    private var capital: Int = 0
+    private var necronomicon: Int = 0
+    val bookText = context.getString(R.string.kapital)
+    private var lastReadFragment: String = ""
+    var currentBookPosition: Int = 300
 
     /** определяем сцены по номерам. Каждый номер используется в определенном количестве диалогов, выбор происходит в методе ниже.*/
     private val scenes: List<Scene> = listOf(
@@ -31,21 +33,14 @@ class GameRepositoryImpl : GameRepository {
         Scene(R.drawable.scen_ships08, "5"),
         Scene(R.drawable.bookseller2, "6"), // bookseller помещение
         Scene(R.drawable.bookseller5, "7"), // bookseller улица
+        Scene(R.drawable.book, "8"), // book
     )
-
-    /** код ниже отвечает за выбор сцены для диалогов.
-     * Например сцена 0 работает на диалоги с 0 по 5. И так далее. У каждого диалога как и у сцены свой индекс.*/
-
 
     /** получаем текущий диалог*/
     override fun getInitialDialogue(): Dialogue {
         return dialogues.firstOrNull()?.second
             ?: throw IllegalStateException("Доступных диалогов нет")
     }
-
-    // Определение additionalResource как изменяемой переменной
-    private var capital: Int = 0
-    private var necronomicon: Int = 0
 
     // Функция для переключения additionalResource
     fun setCapital(value: Int) {
@@ -56,23 +51,46 @@ class GameRepositoryImpl : GameRepository {
     private fun getDialoguesWithOptions(): List<Pair<Int, Dialogue>> {
         return dialogues.map { (index, dialogue) ->
             index to dialogue.copy(
-//                options = if (capital>0) {
                 options = dialogue.options
-//                } else {
-//                    dialogue.options.filter { !it.setCapital }
-//                }
             )
         }
     }
 
     /** получаем индекс диалога*/
     override fun getDialogueByIndex(index: Int): Dialogue? {
-        return getDialoguesWithOptions().find { it.first == index }?.second
+        val dialogue = getDialoguesWithOptions().find { it.first == index }?.second
+        dialogue?.let {
+            if (index == 5 || index == 112) { /** отмечаем диалоги, в которых будет чтение книги*/
+                val nextFragment = getNextBookFragment()
+                updateDialogueWithNextFragment(it, nextFragment)
+            }
+        }
+        return dialogue
     }
 
     /** получаем текущую сцену*/
     override fun getInitialScene(): Scene {
         return scenes.first()
+    }
+
+    fun getNextBookFragment(): String {
+        currentBookPosition += 100 // Используем фиксированное значение для увеличения позиции чтения
+        val endIndex = currentBookPosition + 300 // Изменяем конечную позицию чтения
+        lastReadFragment = if (currentBookPosition < bookText.length) {
+            if (endIndex < bookText.length) {
+                bookText.substring(currentBookPosition, endIndex)
+            } else {
+                bookText.substring(currentBookPosition)
+            }
+        } else {
+            "Конец книги"
+        }
+        return lastReadFragment // Возвращаем последний прочитанный фрагмент книги
+    }
+
+    // Функция для обновления текста диалога на основе последнего прочитанного фрагмента книги
+    fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
+        dialogue.text = lastReadFragment
     }
 
     /**
@@ -166,6 +184,7 @@ class GameRepositoryImpl : GameRepository {
                 )
             )
         ),
+
         Pair(
             4, Dialogue(
                 text = "Лучики солнца проникают через занавеску, играя на моем лице...",
@@ -173,13 +192,33 @@ class GameRepositoryImpl : GameRepository {
                 options = listOf()
             )
         ),
+
         Pair(
             5, Dialogue(
-                text = "За последние годы мне многим пришлось пожертвовать и еще большее сделать, чтобы сегодняшний день наступил.",
-                scene = scenes[1],
-                options = listOf()
+                text = getNextBookFragment(), // Получаем следующий фрагмент книги
+                scene = scenes[8],
+                options = listOf(
+                    Option(
+                        text = "следующая страница",
+                        nextDialogueIndex = 5, // Оставляем тот же индекс диалога
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, currentBookPosition)
+                    ),
+                    Option(
+                        text = "закрыть книгу",
+                        nextDialogueIndex = 6,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                    )
+                )
             )
         ),
+
+//        Pair(
+//            5, Dialogue(
+//                text = "За последние годы мне многим пришлось пожертвовать и еще большее сделать, чтобы сегодняшний день наступил.",
+//                scene = scenes[1],
+//                options = listOf()
+//            )
+//        ),
         Pair(
             6, Dialogue(
                 text = "В адмиралтействе я получили документы и приказ о назначении капитаном, ближайшим рейсом отправляюсь в порт Либава",
@@ -361,7 +400,6 @@ class GameRepositoryImpl : GameRepository {
                         resourceEffect = Resource(0, 0, 5, 10, 10, 0, 0)
                     ),
                 )
-
             )
         ),
         Pair(
@@ -694,10 +732,35 @@ class GameRepositoryImpl : GameRepository {
             110, Dialogue(
                 text = "Тут больше нечего смотреть и нам пора вернуться на корабль",
                 scene = scenes[4],
+                options = listOf()
+            )
+        ),
+        Pair(
+            111, Dialogue(
+                text = "Конец дня, я могу уединиться в своей каюте и полистать одну из книг коллекции",
+                scene = scenes[4],
                 options = listOf(
                     Option(
-                        text = "Следующая глава",
-                        nextDialogueIndex = 111,
+                        text = "(чтение книг происходит автоматически в конце главы, оно не влияет на сюжет и может быть пропущено)",
+                        nextDialogueIndex = 112,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                    )
+                )
+            )
+        ),
+        Pair(
+            112, Dialogue(
+                text = getNextBookFragment(), // Получаем следующий фрагмент книги
+                scene = scenes[8],
+                options = listOf(
+                    Option(
+                        text = "следующая страница",
+                        nextDialogueIndex = 112, // Оставляем тот же индекс диалога
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, currentBookPosition)
+                    ),
+                    Option(
+                        text = "закрыть книгу",
+                        nextDialogueIndex = 113,
                         resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
                     )
                 )
@@ -706,14 +769,14 @@ class GameRepositoryImpl : GameRepository {
 
         /** ГЛАВА 3 Виго, Испания*/
         Pair(
-            111, Dialogue(
+            113, Dialogue(
                 text = "Виго, Испания.::",
                 scene = scenes[5],
                 options = listOf()
             )
         ),
         Pair(
-            112, Dialogue(
+            114, Dialogue(
                 text = "Виго, Испания",
                 scene = scenes[5],
                 options = listOf(
