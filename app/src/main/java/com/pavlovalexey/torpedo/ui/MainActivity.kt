@@ -165,12 +165,11 @@ class MainActivity : AppCompatActivity() {
         val currentDialogue =
             mainViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
 
-        // Разделение текста диалога на части до и после "::"
-        val parts = currentDialogue.text.split("::")
-        val formattedText = if (parts.size == 2) {
+// Разделение текста диалога на части до и после "::"
+        val parts = currentDialogue.text?.split("::")
+        val formattedText = if (parts?.size == 2) {
             val underlinedText = parts[0] // Текст, который нужно подчеркнуть
             val remainingText = parts[1] // Оставшаяся часть текста
-
             // Формирование отформатированного текста с подчеркнутой и голубой частью
             SpannableStringBuilder().apply {
                 append(underlinedText)
@@ -186,7 +185,7 @@ class MainActivity : AppCompatActivity() {
                 append(remainingText)
             }
         } else {
-            currentDialogue.text // Если "::" нет, просто используем весь текст без подчеркивания и голубого цвета
+            currentDialogue.text ?: ""
         }
 
         dialogueTextView.text = formattedText

@@ -17,17 +17,15 @@ import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Characters.bumblebee
 import com.pavlovalexey.torpedo.model.Characters.next
 import com.pavlovalexey.torpedo.model.Characters.novikov
-import com.pavlovalexey.torpedo.viewmodel.MainViewModel
 
 class GameRepositoryImpl(private val context: Context) : GameRepository {
 
-    val resource = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+    private var relationship: Int = 0
     private var capital: Int = 0
     private var necronomicon: Int = 0
     val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
     var currentBookPosition: Int = 300
-
 
     /** определяем сцены по номерам. Каждый номер используется в определенном количестве диалогов, выбор происходит в методе ниже.*/
     private val scenes: List<Scene> = listOf(
@@ -51,11 +49,6 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
             ?: throw IllegalStateException("Доступных диалогов нет")
     }
 
-    // Функция для переключения additionalResource
-    fun setCapital(value: Int) {
-        capital = value
-    }
-
     // Функция для получения диалогов с опциями на основе capital
     private fun getDialoguesWithOptions(): List<Pair<Int, Dialogue>> {
         return dialogues.map { (index, dialogue) ->
@@ -72,7 +65,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
             if (index == 112 || index == 560) {
                 /** отмечаем диалоги, в которых будет чтение книги*/
                 val nextFragment = getNextBookFragment()
-                updateDialogueWithNextFragment(it, nextFragment)
+                updateDialogueWithNextFragment(it, nextFragment, 0, 0)
             }
         }
         return dialogue
@@ -99,8 +92,10 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
     }
 
     // Функция для обновления текста диалога на основе последнего прочитанного фрагмента книги
-    fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
-        dialogue.text = lastReadFragment
+    fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String, relationshipEffect: Int = 0, capitalEffect: Int = 0) {
+        dialogue.text = nextFragment
+        relationship += relationshipEffect
+        capital += capitalEffect
     }
 
     /**
@@ -242,50 +237,55 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                 Option(
                     text = "Такова твоя женская доля, милая",
                     nextDialogueIndex = 13,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1)
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
                 ),
                 Option(
                     text = "Ты будешь радоваться моим успехом и праздновать вместе со мной победу!",
-                    nextDialogueIndex = 13,
+                    nextDialogueIndex = 13
                 ),
                 Option(
                     text = "Клянусь тебе, душа моя, я ни дня не перестану думать о тебе в походе! И даже ночью ты будешь приходить ко мне во снах",
                     nextDialogueIndex = 13,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1)
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 )
-            )
+            ),
+            dialogFunction = { relationship + 1 }
         ),
 
         13 to Dialogue(
-            text = when (resource.getRelationship()) {
-                -1 -> "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
-                0 -> "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
-                1 -> "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
-                else -> "$anastasia::: ..."
+            text = if (relationship < 0) {
+                "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
+            } else if (relationship == 0) {
+                "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
+            } else if (relationship > 0) {
+                "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
+            } else {
+                "$anastasia::: ..."
             },
             scene = scenes[10],
             options = listOf(
                 Option(
                     text = "Думаю мне пора, возможно свидимся, Настенька...",
                     nextDialogueIndex = 14,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1)
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
                 ),
                 Option(
                     text = "Я привезу тебе заморских сувениров, возможно красивое шёлковое кимоно",
                     nextDialogueIndex = 14,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1)
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 ),
                 Option(
                     text = "Благодаря твоей горячей любви я смогу выбраться из пекла войны и вернуться к тебе живым, " +
                             "и мы отпразнуем достойную свадьбу!",
                     nextDialogueIndex = 14,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1)
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 )
-            )
+            ),
+            dialogFunction = { relationship + 1 }
         ),
 
         14 to Dialogue(
-            text = when (resource.getRelationship()) {
+            text = when (relationship) {
                 -2 -> "$anastasia::: Категорически согластна с тем, что тебе пора... "
                 -1 -> "$anastasia::: Думаю, тебе пора..."
                 0 -> "$anastasia::: ..."
@@ -295,7 +295,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
             },
             scene = scenes[10],
             options = listOf(
-                when (resource.getRelationship()) {
+                when (relationship) {
                     -2 -> Option(
                         text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
                         nextDialogueIndex = 18,
@@ -335,11 +335,11 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         ),
 
         18 to Dialogue(
-            text = "Покидаю Петербург...",
+            text = "Покидаю Петербург... $relationship",
             scene = scenes[0],
             options = listOf(
                 Option(
-                    text = "$next::",
+                    text = next,
                     nextDialogueIndex = 19
                 )
             )
@@ -741,22 +741,24 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
             },
         ),
 
-        106 to Dialogue(
-            text = "$bookseller::: Вы ведь русские, да? Скромные 149 Российских Царских рублей господа! Уверяю вас, вы не пожалеете!",
-            scene = scenes[6],
-            listOf(
-                Option(
-                    text = "Купить книгу (ВНИМАНИЕ! Добавление книги в коллекцию может создать альтернативную историю развития событий)",
-                    nextDialogueIndex = 109,
-                    resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0)
-                ),
-                Option(
-                    text = "Отказаться от покупки",
-                    nextDialogueIndex = 110,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-                )
-            )
-        ),
+//        106 to Dialogue(
+//            text = "$bookseller::: Вы ведь русские, да? Скромные 149 Российских Царских рублей господа! Уверяю вас, вы не пожалеете!",
+//            scene = scenes[6],
+//            listOf(
+//                Option(
+//                    text = "Купить книгу (ВНИМАНИЕ! Добавление книги в коллекцию может создать альтернативную историю развития событий)",
+//                    nextDialogueIndex = 109,
+//                    resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0),
+//                    optionFunction = { setCapital(+1) }
+//
+//                ),
+//                Option(
+//                    text = "Отказаться от покупки",
+//                    nextDialogueIndex = 110,
+//                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+//                )
+//            )
+//        ),
 
         109 to Dialogue(
             text = "Расчитавшись с торговцем беру книгу из его морщинистых рук...",
