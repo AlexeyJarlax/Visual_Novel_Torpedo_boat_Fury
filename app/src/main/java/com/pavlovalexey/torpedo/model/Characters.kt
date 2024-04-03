@@ -8,6 +8,8 @@ import androidx.core.text.HtmlCompat
 /** ПЕРСОНАЖИ */
 
 internal object Characters {
+    val next = "Следующая глава"
+    val anastasia = "Анастасия"
     val novikov = "Новиков"
     val bookseller = "Странный торговец"
     val admiral = "Адмирал Рожественский"

@@ -43,17 +43,14 @@ package com.pavlovalexey.torpedo.ui
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -62,13 +59,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.google.android.material.button.MaterialButton
 import com.pavlovalexey.torpedo.R
-import com.pavlovalexey.torpedo.viewmodel.GameViewModel
+import com.pavlovalexey.torpedo.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import android.view.animation.ScaleAnimation
-import androidx.core.view.doOnLayout
+import androidx.fragment.app.commit
 
 class MainActivity : AppCompatActivity() {
-    private val gameViewModel: GameViewModel by viewModel()
+    private val mainViewModel: MainViewModel by viewModel()
 
     private lateinit var dialogueTextView: TextView
     private lateinit var optionsLayout: LinearLayout
@@ -80,11 +76,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var maximTextView: TextView
     private lateinit var capitalTextView: TextView
     private lateinit var necronomiconTextView: TextView
+    private lateinit var relationshipTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initializeViews()
+        subscribeToViewModel()
+    }
 
+    private fun initializeViews() {
         dialogueTextView = findViewById(R.id.dialogueTextView)
         optionsLayout = findViewById(R.id.optionsLayout)
         sceneImageView = findViewById(R.id.sceneImageView)
@@ -95,27 +96,42 @@ class MainActivity : AppCompatActivity() {
         maximTextView = findViewById(R.id.maximTextView)
         capitalTextView = findViewById(R.id.capitalTextView)
         necronomiconTextView = findViewById(R.id.necronomiconTextView)
+        relationshipTextView = findViewById(R.id.relationshipTextView)
+        findViewById<View>(R.id.resourcesLayout).setOnClickListener {
+            openResourceFragment()
+        }
+        findViewById<View>(R.id.resourcesLayout2).setOnClickListener {
+            openResourceFragment()
+        }
+        findViewById<View>(android.R.id.content).setOnClickListener {
+            if (optionsLayout.childCount == 0) { // условие - если кнопок нет то клик по всей вьюхе переключает на следующий диалог
+                mainViewModel.goToNextDialogue()
+            }
+        }
+    }
 
-        gameViewModel.currentScene.observe(this, Observer { scene ->
+    private fun subscribeToViewModel() {
+        mainViewModel.currentScene.observe(this, Observer { scene ->
             sceneImageView.setImageResource(scene.background)
         })
 
-        gameViewModel.currentDialogueIndex.observe(this, Observer { index ->
+        mainViewModel.currentDialogueIndex.observe(this, Observer { index ->
             updateUI(index)
         })
+    }
 
-        findViewById<View>(android.R.id.content).setOnClickListener {
-            if (optionsLayout.childCount == 0) { // условие - если кнопок нет то клик по всей вьюхе переключает на следующий диалог
-                gameViewModel.goToNextDialogue()
-            }
-
+    private fun openResourceFragment() {
+        // Открываем ResourceFragment при клике на resourcesLayout или resourcesLayout2
+        supportFragmentManager.commit {
+            replace(R.id.fragment_container, MenuFragment())
+            addToBackStack(null) // Добавляем фрагмент в стек возврата
         }
     }
 
     private fun animateTextChange(textView: TextView, newText: String) {
         if (textView.text.toString() != newText) {
             val animator = ValueAnimator.ofFloat(1f, 2f)
-            animator.duration = 400 // Устанавливаем длительность анимации увеличения
+            animator.duration = 400 // длительность анимации увеличения
 
             animator.addUpdateListener { animation ->
                 val animatedValue = animation.animatedValue as Float
@@ -127,7 +143,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val reverseAnimator = ValueAnimator.ofFloat(2f, 1f)
-            reverseAnimator.duration = 400 // Устанавливаем длительность анимации уменьшения
+            reverseAnimator.duration = 400 // длительность анимации уменьшения
 
             reverseAnimator.addUpdateListener { animation ->
                 val animatedValue = animation.animatedValue as Float
@@ -137,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
             animator.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
-                    reverseAnimator.start() // После завершения анимации увеличения запускаем анимацию уменьшения
+                    reverseAnimator.start()
                 }
             })
 
@@ -147,7 +163,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI(currentDialogueIndex: Int) {
         val currentDialogue =
-            gameViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
+            mainViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
 
         // Разделение текста диалога на части до и после "::"
         val parts = currentDialogue.text.split("::")
@@ -176,10 +192,13 @@ class MainActivity : AppCompatActivity() {
         dialogueTextView.text = formattedText
 
         // Установка значений ресурсов
-        val resources = gameViewModel.resources.value
+        val resources = mainViewModel.resources.value
         resources?.let {
             if (it.rubles != 0) {
-                animateTextChange(rublesTextView, getString(R.string.currency_format, "₽", it.rubles))
+                animateTextChange(
+                    rublesTextView,
+                    getString(R.string.currency_format, "₽", it.rubles)
+                )
             } else {
                 rublesTextView.text = ""
             }
@@ -212,7 +231,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (it.capital != 0) {
-                animateTextChange(capitalTextView, getString(R.string.symbol_format, "☭", it.capital))
+                animateTextChange(
+                    capitalTextView,
+                    getString(R.string.symbol_format, "☭", it.capital)
+                )
             } else {
                 capitalTextView.text = ""
             }
@@ -225,6 +247,15 @@ class MainActivity : AppCompatActivity() {
             } else {
                 necronomiconTextView.text = ""
             }
+
+            when (it.relationship) {
+                -2 -> animateTextChange(relationshipTextView, "😡")
+                -1 -> animateTextChange(relationshipTextView, "😠")
+                0 -> relationshipTextView.text = ""
+                1 -> animateTextChange(relationshipTextView, "🙂")
+                2 -> animateTextChange(relationshipTextView, "😊")
+                else -> relationshipTextView.text = ""
+            }
         }
 
         optionsLayout.removeAllViews()
@@ -234,10 +265,19 @@ class MainActivity : AppCompatActivity() {
             if (optionButtonView is MaterialButton) {
                 optionButtonView.text = option.text
                 optionButtonView.setOnClickListener {
-                    gameViewModel.selectOption(index)
+                    mainViewModel.selectOption(index)
                 }
                 optionsLayout.addView(optionButtonView)
             }
         }
+    }
+
+    fun hideOptionsLayout() {
+        optionsLayout.visibility = View.INVISIBLE
+    }
+
+    fun showOptionsLayout() {
+        optionsLayout.visibility = View.VISIBLE
+
     }
 }

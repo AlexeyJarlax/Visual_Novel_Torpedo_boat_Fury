@@ -3,8 +3,10 @@ package com.pavlovalexey.torpedo.repository
 /** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
 
 import android.content.Context
+import android.content.res.Resources
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Characters.admiral
+import com.pavlovalexey.torpedo.model.Characters.anastasia
 import com.pavlovalexey.torpedo.model.Characters.bookseller
 import com.pavlovalexey.torpedo.model.Characters.paramonov
 import com.pavlovalexey.torpedo.model.Characters.reztsov
@@ -13,27 +15,34 @@ import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Characters.bumblebee
+import com.pavlovalexey.torpedo.model.Characters.next
 import com.pavlovalexey.torpedo.model.Characters.novikov
+import com.pavlovalexey.torpedo.viewmodel.MainViewModel
 
 class GameRepositoryImpl(private val context: Context) : GameRepository {
 
+    val resource = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
     private var capital: Int = 0
     private var necronomicon: Int = 0
     val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
     var currentBookPosition: Int = 300
 
+
     /** определяем сцены по номерам. Каждый номер используется в определенном количестве диалогов, выбор происходит в методе ниже.*/
     private val scenes: List<Scene> = listOf(
-        Scene(R.drawable.scen_spb1, "0"),
-        Scene(R.drawable.scen_spb2, "1"),
-        Scene(R.drawable.scen_ships03, "2"),
-        Scene(R.drawable.scen_ships06, "3"),
-        Scene(R.drawable.scen_ships04, "4"),
-        Scene(R.drawable.scen_ships08, "5"),
+        Scene(R.drawable.scen_spb1, "0"), // Петербург
+        Scene(R.drawable.scen_spb2, "1"), // Петербург
+        Scene(R.drawable.scen_ships03, "2"), // Корабль
+        Scene(R.drawable.scen_ships06, "3"), // Корабль
+        Scene(R.drawable.scen_ships04, "4"), // Корабль
+        Scene(R.drawable.scen_ships08, "5"), // Корабль
         Scene(R.drawable.bookseller2, "6"), // bookseller помещение
         Scene(R.drawable.bookseller5, "7"), // bookseller улица
         Scene(R.drawable.book, "8"), // book
+        Scene(R.drawable.char12, "9"), // Капитан-поручик Резцов - офицер разведки
+        Scene(R.drawable.lady00, "10"), // Благоверная невеста
+        Scene(R.drawable.lady01, "11"), // Благоверная невеста
     )
 
     /** получаем текущий диалог*/
@@ -60,7 +69,8 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
     override fun getDialogueByIndex(index: Int): Dialogue? {
         val dialogue = getDialoguesWithOptions().find { it.first == index }?.second
         dialogue?.let {
-            if (index == 5 || index == 112) { /** отмечаем диалоги, в которых будет чтение книги*/
+            if ( index == 112|| index == 560) {
+                /** отмечаем диалоги, в которых будет чтение книги*/
                 val nextFragment = getNextBookFragment()
                 updateDialogueWithNextFragment(it, nextFragment)
             }
@@ -115,17 +125,17 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Легкое испытание",
                         nextDialogueIndex = 1,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "Трудный поход",
                         nextDialogueIndex = 2,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "Стальная воля",
                         nextDialogueIndex = 3,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -138,12 +148,12 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "назад",
                         nextDialogueIndex = 0,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "далее",
                         nextDialogueIndex = 4,
-                        resourceEffect = Resource(4500, 6, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(4500, 6, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -156,12 +166,12 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "назад",
                         nextDialogueIndex = 0,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "далее",
                         nextDialogueIndex = 4,
-                        resourceEffect = Resource(3000, 5, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(3000, 5, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -174,12 +184,12 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "назад",
                         nextDialogueIndex = 0,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "далее",
                         nextDialogueIndex = 4,
-                        resourceEffect = Resource(2400, 4, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(2400, 4, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -195,30 +205,11 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
 
         Pair(
             5, Dialogue(
-                text = getNextBookFragment(), // Получаем следующий фрагмент книги
-                scene = scenes[8],
-                options = listOf(
-                    Option(
-                        text = "следующая страница",
-                        nextDialogueIndex = 5, // Оставляем тот же индекс диалога
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, currentBookPosition)
-                    ),
-                    Option(
-                        text = "закрыть книгу",
-                        nextDialogueIndex = 6,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
-                    )
-                )
+                text = "За последние годы мне многим пришлось пожертвовать и еще большее сделать, чтобы сегодняшний день наступил.",
+                scene = scenes[1],
+                options = listOf()
             )
         ),
-
-//        Pair(
-//            5, Dialogue(
-//                text = "За последние годы мне многим пришлось пожертвовать и еще большее сделать, чтобы сегодняшний день наступил.",
-//                scene = scenes[1],
-//                options = listOf()
-//            )
-//        ),
         Pair(
             6, Dialogue(
                 text = "В адмиралтействе я получили документы и приказ о назначении капитаном, ближайшим рейсом отправляюсь в порт Либава",
@@ -242,13 +233,137 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         ),
         Pair(
             9, Dialogue(
-                text = "С друзьями и близкими я уже попрощался, теперь самыми близкими людьми на следующие пол года будет моя команда.",
+                text = "Пора пращаться с благоверной невестой...",
                 scene = scenes[1],
+                options = listOf()
+            )
+        ),
+        Pair(
+            10, Dialogue(
+                text = "$anastasia::: Почему на войну идешь именно ты?! Почему ни кто-то другой?!",
+                scene = scenes[10],
+                options = listOf()
+            )
+        ),
+        Pair(
+            11, Dialogue(
+                text = "Потому-что это мой долг, я офицер флота. \n\n" +
+                        "А кроме того, благодаря этому назначению я стану капитаном корабля, КАПИТАНОМ, ты понимаешь? ",
+                scene = scenes[10],
+                options = listOf()
+            )
+        ),
+        Pair(
+            12, Dialogue(
+                text = "$anastasia::: И что же мне теперь, быть вдовой капитана и радоваться этому?",
+                scene = scenes[10],
                 options = listOf(
                     Option(
-                        text = "Пора...",
+                        text = "Такова твоя женская доля, милая",
+                        nextDialogueIndex = 13,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1)
+                    ),
+                    Option(
+                        text = "Ты будешь радоваться моим успехом и праздновать вместе со мной победу!",
+                        nextDialogueIndex = 13,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                    ),
+                    Option(
+                        text = "Клянусь тебе, душа моя, я ни дня не перестану думать о тебе в походе! И даже ночью ты будешь приходить ко мне во снах",
+                        nextDialogueIndex = 13,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1)
+                    )
+                )
+            )
+        ),
+        Pair(
+            13, Dialogue(
+                text = when (resource.getRelationship()) {
+                    -1 -> "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
+                    0 -> "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
+                    1 -> "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
+                    else -> "$anastasia::: ..."
+                },
+                scene = scenes[10],
+                options = listOf(
+                    Option(
+                        text = "Думаю мне пора, возможно свидимся, Настенька...",
+                        nextDialogueIndex = 14,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1)
+                    ),
+                    Option(
+                        text = "Я привезу тебе заморских сувениров, возможно красивое шёлковое кимоно",
+                        nextDialogueIndex = 14,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1)
+                    ),
+                    Option(
+                        text = "Благодаря твоей горячей любви я смогу выбраться из пекла войны и вернуться к тебе живым, " +
+                                "и мы отпразнуем достойную свадьбу!",
+                        nextDialogueIndex = 14,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1)
+                    )
+                )
+            )
+        ),
+        Pair(
+            14, Dialogue(
+                text = when (resource.getRelationship()) {
+                    -2 -> "$anastasia::: Категорически согластна с тем, что тебе пора... "
+                    -1 -> "$anastasia::: Думаю, тебе пора..."
+                    0 -> "$anastasia::: ..."
+                    1 -> "Благоверная меня обнимает и после ужина мы расстаемся."
+                    1 -> "Благоверная меня обнимает и после ужина мы расстаемся. Она обещает, что найдет способ отправить мне весточку"
+                    else -> "$anastasia::: ..."
+                },
+                scene = scenes[10],
+                options = listOf(
+                    when (resource.getRelationship()) {
+                        -2 -> Option(
+                            text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
+                            nextDialogueIndex = 18,
+                            resourceEffect = Resource(-300, 0, 0, 0, 0, 0, 0, 0, 2)
+                        )
+                        -1 -> Option(
+                            text = "С чувством горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале",
+                            nextDialogueIndex = 18,
+                            resourceEffect = Resource(-100, 0, 0, 0, 0, 0, 0, 0, 1)
+                        )
+                        0 -> Option(
+                            text = "Покидаю дом Насти и возвращаюсь домой",
+                            nextDialogueIndex = 18,
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                        )
+
+                        1 -> Option(
+                            text = "С чувством покоя возвращаюсь домой",
+                            nextDialogueIndex = 18,
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1)
+                        )
+                        2 -> Option(
+                            text = "С чувством покоя возвращаюсь домой",
+                            nextDialogueIndex = 18,
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -2)
+                        )
+                        else -> Option(
+                            text = "...",
+                            nextDialogueIndex = 18,
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                        )
+                    }
+                )
+
+            )
+        ),
+
+        Pair(
+            18, Dialogue(
+                text = "Покидаю Петербург...",
+                scene = scenes[0],
+                options = listOf(
+                    Option(
+                        text = "$next::",
                         nextDialogueIndex = 19,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -397,7 +512,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Принять рапортичку",
                         nextDialogueIndex = 39,
-                        resourceEffect = Resource(0, 0, 5, 10, 10, 0, 0)
+                        resourceEffect = Resource(0, 0, 5, 10, 10, 0, 0, 0, 0)
                     ),
                 )
             )
@@ -431,17 +546,17 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Проведем ревизию запасов и вооружения",
                         nextDialogueIndex = 43,
-                        resourceEffect = Resource(0, 0, -1, -1, -1, 0, 0)
+                        resourceEffect = Resource(0, 0, -1, -1, -1, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "Всем отбой. Отдыхаем перед походом",
                         nextDialogueIndex = 44,
-                        resourceEffect = Resource(0, 0, 1, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 1, 0, 0, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "Выставить на ужин ендовы с водкой для команды, удвоить мерную кружку. Взять в кабаке бочку офицерам из лучших запасов.",
                         nextDialogueIndex = 44,
-                        resourceEffect = Resource(-100, 1, 2, -1, 0, 0, 0)
+                        resourceEffect = Resource(-100, 1, 2, -1, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -461,7 +576,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 50,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -637,7 +752,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 100,
-                        resourceEffect = Resource(0, 1, -1, -1, 0, 0, 0)
+                        resourceEffect = Resource(0, 1, -1, -1, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -654,7 +769,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         Pair(
             101, Dialogue(
                 text = "Капитан-поручик Резцов, сопровождавший меня на берегу в целях безопастности, держался рядом, со скучающим видом листая газету",
-                scene = scenes[4],
+                scene = scenes[9],
                 options = listOf()
             )
         ),
@@ -668,27 +783,27 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         Pair(
             103, Dialogue(
                 text = "$reztsov::: Мы офицеры и люди образованные, вряд ли вы сможете нас чем-то удивить, сударь",
-                scene = scenes[4],
+                scene = scenes[9],
                 options = listOf()
             )
         ),
         Pair(
             104, Dialogue(
                 text = "Резцов произнёс это на языке торговца практически без акцента, что меня изрядно удивило",
-                scene = scenes[4],
+                scene = scenes[9],
                 options = listOf()
             )
         ),
         Pair(
             105, Dialogue(
                 text = "Торговец открывает одну из полок его большого письменного стола ключом и достает толстую книгу, протягивая ее мне, так как я стоял ближе",
-                scene = scenes[4],
+                scene = scenes[6],
                 options = if (capital > 1) { // Проверяем значение
                     listOf(
                         Option(
                             text = "Взглянув на обложку, разочарованно понимаю, что эту книгу я читал, и интереса она не представляет",
                             nextDialogueIndex = 110,
-                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                         ),
                     )
                 } else {
@@ -696,7 +811,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                         Option(
                             text = "На незнакомой обложке красуется название: Капитал. Автор книги: Карл Маркс...",
                             nextDialogueIndex = 106,
-                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
 //                        NotUsingThisCaseIfCapitalIsTrue = true // Устанавливаем значение, блокирующее этот вариант ответа для случая, если книга Капитал уже имеется
                         )
                     )
@@ -706,17 +821,17 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         Pair(
             106, Dialogue(
                 text = "$bookseller::: Вы ведь русские, да? Скромные 149 Российских Царских рублей господа! Уверяю вас, вы не пожалеете!",
-                scene = scenes[4],
+                scene = scenes[6],
                 listOf(
                     Option(
                         text = "Купить книгу (ВНИМАНИЕ! Добавление книги в коллекцию может создать альтернативную историю развития событий)",
                         nextDialogueIndex = 109,
-                        resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0)
+                        resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0)
                     ),
                     Option(
                         text = "Отказаться от покупки",
                         nextDialogueIndex = 110,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -724,7 +839,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         Pair(
             109, Dialogue(
                 text = "Расчитавшись с торговцем беру книгу из его морщинистых рук...",
-                scene = scenes[4],
+                scene = scenes[6],
                 options = listOf()
             )
         ),
@@ -743,7 +858,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "(чтение книг происходит автоматически в конце главы, оно не влияет на сюжет и может быть пропущено)",
                         nextDialogueIndex = 112,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -756,12 +871,12 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "следующая страница",
                         nextDialogueIndex = 112, // Оставляем тот же индекс диалога
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, currentBookPosition)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     ),
                     Option(
                         text = "закрыть книгу",
                         nextDialogueIndex = 113,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -783,7 +898,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 151,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -812,7 +927,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 201,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -863,7 +978,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                         Option(
                             text = "Взглянув на обложку, разочарованно понимаю, что эту книгу читал, и она не представляет интереса",
                             nextDialogueIndex = 209,
-                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0),
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
                         ),
                     )
                 } else {
@@ -871,7 +986,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                         Option(
                             text = "На незнакомой обложке красуется название: Что делать? Наболевшие вопросы нашего движения» — В. И. Ленин",
                             nextDialogueIndex = 207,
-                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0),
+                            resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
 //                        NotUsingThisCaseIfCapitalIsTrue = true // Устанавливаем значение, блокирующее этот вариант ответа для случая, если книга Капитал уже имеется
                         )
                     )
@@ -886,13 +1001,12 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Купить книгу (-49 Царских Рублей)",
                         nextDialogueIndex = 208,
-                        resourceEffect = Resource(-49, 0, 0, 0, 0, 1, 0),
-//                        capital = true // Устанавливаем значение для этой опции
+                        resourceEffect = Resource(-49, 0, 0, 0, 0, 1, 0, 0, 0)
                     ),
                     Option(
                         text = "Отказаться от покупки",
                         nextDialogueIndex = 209,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0),
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
                     )
                 )
             )
@@ -912,7 +1026,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 301,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -934,7 +1048,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 351,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -956,7 +1070,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 401,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -978,7 +1092,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 451,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -1000,7 +1114,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 501,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )
@@ -1022,7 +1136,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     Option(
                         text = "Следующая глава",
                         nextDialogueIndex = 560,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0)
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                     )
                 )
             )

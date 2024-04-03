@@ -7,5 +7,5 @@ interface GameRepository {
     fun getInitialDialogue(): Dialogue
     fun getDialogueByIndex(index: Int): Dialogue?
     fun getInitialScene(): Scene
-//    fun getSceneByDialogueIndex(dialogueIndex: Int): Scene
+
 }

@@ -3,12 +3,12 @@ package com.pavlovalexey.torpedo.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.pavlovalexey.torpedo.model.Dialogue
+import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.repository.GameRepository
 
-class GameViewModel(val gameRepository: GameRepository) : ViewModel() {
+class MainViewModel(val gameRepository: GameRepository) : ViewModel() {
     private val _currentDialogueIndex = MutableLiveData(0)
     val currentDialogueIndex: LiveData<Int>
         get() = _currentDialogueIndex
@@ -23,7 +23,7 @@ class GameViewModel(val gameRepository: GameRepository) : ViewModel() {
 
     init {
         _currentScene.value = gameRepository.getInitialScene()
-        _resources.value = Resource(0, 0, 0, 0, 0, 0, 0)
+        _resources.value = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
     }
 
     fun selectOption(optionIndex: Int) {
@@ -32,7 +32,7 @@ class GameViewModel(val gameRepository: GameRepository) : ViewModel() {
             gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
         selectedOption?.let { option ->
             val nextDialogueIndex = option.nextDialogueIndex
-            val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0)
+            val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
             _resources.value = Resource(
                 currentResource.rubles + option.resourceEffect.rubles,
                 currentResource.fame + option.resourceEffect.fame,
@@ -40,7 +40,9 @@ class GameViewModel(val gameRepository: GameRepository) : ViewModel() {
                 currentResource.vodka + option.resourceEffect.vodka,
                 currentResource.maxim + option.resourceEffect.maxim,
                 currentResource.capital + option.resourceEffect.capital,
-                currentResource.necronomicon + option.resourceEffect.necronomicon
+                currentResource.necronomicon + option.resourceEffect.necronomicon,
+                currentResource.neisvestno + option.resourceEffect.neisvestno,
+                currentResource.relationship + option.resourceEffect.relationship
             )
             // Получаем следующую сцену для диалога
             val nextScene = gameRepository.getDialogueByIndex(nextDialogueIndex)?.scene
