@@ -4,5 +4,4 @@ data class Dialogue(
     var text: String,
     val scene: Scene,
     val options: List<Option>,
-//    val capital: Boolean = false // сценарий Карл Маркс
 )

@@ -34,18 +34,18 @@ class MainViewModel(val gameRepository: GameRepository) : ViewModel() {
             val nextDialogueIndex = option.nextDialogueIndex
             val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
             _resources.value = Resource(
-                currentResource.rubles + option.resourceEffect.rubles,
-                currentResource.fame + option.resourceEffect.fame,
-                currentResource.teamLoyalty + option.resourceEffect.teamLoyalty,
-                currentResource.vodka + option.resourceEffect.vodka,
-                currentResource.maxim + option.resourceEffect.maxim,
-                currentResource.capital + option.resourceEffect.capital,
-                currentResource.necronomicon + option.resourceEffect.necronomicon,
-                currentResource.neisvestno + option.resourceEffect.neisvestno,
-                currentResource.relationship + option.resourceEffect.relationship
+                currentResource.rubles + (option.resourceEffect?.rubles ?: 0),
+                currentResource.fame + (option.resourceEffect?.fame ?: 0),
+                currentResource.teamLoyalty + (option.resourceEffect?.teamLoyalty ?: 0),
+                currentResource.vodka + (option.resourceEffect?.vodka ?: 0),
+                currentResource.maxim + (option.resourceEffect?.maxim ?: 0),
+                currentResource.capital + (option.resourceEffect?.capital ?: 0),
+                currentResource.necronomicon + (option.resourceEffect?.necronomicon ?: 0),
+                currentResource.neisvestno + (option.resourceEffect?.neisvestno ?: 0),
+                currentResource.relationship + (option.resourceEffect?.relationship ?: 0)
             )
             // Получаем следующую сцену для диалога
-            val nextScene = gameRepository.getDialogueByIndex(nextDialogueIndex)?.scene
+            val nextScene = gameRepository.getDialogueByIndex(nextDialogueIndex ?: 1)?.scene
             // Проверяем, отличается ли следующая сцена от текущей
             nextScene?.let {
                 if (it != _currentScene.value) {
