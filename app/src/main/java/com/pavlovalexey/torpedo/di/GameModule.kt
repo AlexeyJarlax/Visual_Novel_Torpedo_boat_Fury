@@ -7,13 +7,13 @@ import com.pavlovalexey.torpedo.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
+/** модуль зависимостей. Схема активити - сингл + фрагменты Основные рвсчеты в GameRepositoryImpl*/
+
 val gameModule = module {
-    // Определяем Resource как синглтон
+
     single<Resource> { Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) }
 
-    // Передаем ресурс из модуля зависимостей в конструктор GameRepositoryImpl
     single<GameRepository> { GameRepositoryImpl(get(), get()) }
 
-    // Передаем ресурс из модуля зависимостей в конструктор MainViewModel
     viewModel { MainViewModel(get(), get()) }
 }

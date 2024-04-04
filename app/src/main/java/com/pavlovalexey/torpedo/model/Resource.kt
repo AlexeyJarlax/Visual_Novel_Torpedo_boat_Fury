@@ -1,5 +1,7 @@
 package com.pavlovalexey.torpedo.model
 
+/** ресурсы игры, критическое количество некоторых приведет к поражению или усложнит игру. В разных ситуациях диалогов могут обмениваться.*/
+
 data class Resource(
     var rubles: Int,
     var fame: Int,

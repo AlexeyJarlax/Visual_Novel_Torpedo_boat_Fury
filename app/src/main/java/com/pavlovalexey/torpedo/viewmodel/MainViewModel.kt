@@ -8,6 +8,8 @@ import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.repository.GameRepository
 
+/** Стандартная вью модель с пробросом функций на RepositoryImpl через интерфейс. Схема активити - сингл + фрагменты Основные рвсчеты в GameRepositoryImpl*/
+
 class MainViewModel(private val resource: Resource, val gameRepository: GameRepository) : ViewModel() {
 
     private val _currentDialogueIndex = MutableLiveData(0)

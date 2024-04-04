@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.pavlovalexey.torpedo.R
 
+/** фрагмент для верхнего меню игры. Содержит справку по ресурсам и события, три кнопки*/
+
 class MenuFragment : Fragment() {
 
     override fun onCreateView(

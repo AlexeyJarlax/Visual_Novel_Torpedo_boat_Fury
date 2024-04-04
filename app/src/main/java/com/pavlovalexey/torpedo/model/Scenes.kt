@@ -18,6 +18,10 @@ object Scenes {
         Scene(R.drawable.book, "8"), // book
         Scene(R.drawable.char12, "9"), // Капитан-поручик Резцов - офицер разведки
         Scene(R.drawable.lady00, "10"), // Благоверная невеста
-        Scene(R.drawable.lady01, "11") // Благоверная невеста
+        Scene(R.drawable.lady01, "11"), // Благоверная невеста
+        Scene(R.drawable.char09, "12"), // Капитан 2-го ранга Парамонов - Офицер артилерии
+        Scene(R.drawable.fale, "13"), // Провал
+        Scene(R.drawable.scen_ships01, "14"), // сражение
+        Scene(R.drawable.scen_ships05, "15"), // верблюд
     )
 }

@@ -1,5 +1,7 @@
 package com.pavlovalexey.torpedo.model
 
+/** опции для диалога с выбором вариантов.*/
+
 data class Option(
     val text: String,
     val nextDialogueIndex: Int,
