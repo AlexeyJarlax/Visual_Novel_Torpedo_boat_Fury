@@ -3,6 +3,7 @@ package com.pavlovalexey.torpedo.repository
 /** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
 
 import android.content.Context
+import android.media.MediaPlayer
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Characters.admiral
 import com.pavlovalexey.torpedo.model.Characters.anastasia
@@ -13,27 +14,31 @@ import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
-import com.pavlovalexey.torpedo.model.Characters.bumblebee
-import com.pavlovalexey.torpedo.model.Characters.next
-import com.pavlovalexey.torpedo.model.Characters.novikov
 import com.pavlovalexey.torpedo.model.Scenes
+import com.pavlovalexey.torpedo.model.Music
+import com.pavlovalexey.torpedo.model.MusicList
+import com.pavlovalexey.torpedo.model.Characters.bumblebee
+import com.pavlovalexey.torpedo.model.Characters.novikov
 
 class GameRepositoryImpl(
     private val context: Context,
     private val initialResource: Resource
 ) : GameRepository {
 
+    private val scenes: List<Scene> = Scenes.list
+    private val musicList: List<Music> = MusicList.list
     private var currentResource: Resource = initialResource
     private val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
     private var currentBookPosition: Int = 0
     private var lastUsedScene: Scene? = null
-    private val scenes: List<Scene> = Scenes.list
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun getInitialDialogue(): Dialogue {
-        return dialogues.firstOrNull()?.second?.apply {
-            lastUsedScene = scene
-        } ?: throw IllegalStateException("диалоги недоступны")
+        val initialDialogue = dialogues.firstOrNull()?.second ?: throw IllegalStateException("Диалоги недоступны")
+        initialDialogue.musicId?.let { playMusic(initialDialogue) }
+        lastUsedScene = initialDialogue.scene
+        return initialDialogue
     }
 
     override fun getInitialScene(): Scene {
@@ -70,8 +75,7 @@ class GameRepositoryImpl(
     override fun getDialogueByIndex(index: Int): Dialogue? {
         val dialogue = dialogues.find { it.first == index }?.second
         dialogue?.let {
-            if (index == 1 || index == 112 || index == 211) {
-                /** отмечаем диалоги, в которых будет чтение книги*/
+            if (index == 112 || index == 211) {
                 val nextFragment = getNextBookFragment()
                 updateDialogueWithNextFragment(it, nextFragment)
             }
@@ -80,6 +84,9 @@ class GameRepositoryImpl(
                 updateResources(effect)
             }
             lastUsedScene = it.scene ?: lastUsedScene
+            it.musicId?.let { musicId ->
+                playMusic(it)
+            }
         }
         return dialogue
     }
@@ -97,27 +104,44 @@ class GameRepositoryImpl(
             "Конец книги"
         }
         lastReadFragment += "---"
-
-
         return lastReadFragment // Возвращаем последний прочитанный фрагмент книги
     }
 
-    /**
-     * В этом коде реализована логика для управления сюжетом.
-     * Основные компоненты кода:
-     * Pair(0 to Dialogue(                                 Пара (индекс диалога, объект диалога)
-     **** text = "",                                     Текст диалога
-     **** options = listOf(                              Опция диалога (список объектов типа опция, представляющий выбор из вариантов ответа (каждый объект вариант)
-     ******* Option(                                     Объект вариант ответа
-     ********** text = "",                               Текст варианта ответа
-     ********** nextDialogueIndex = 1,                   Следующий диалог, при выборе этого варианта
-     ********** resourceEffect = Resource(10, 10, 10)    Эффект на ресурсы (Рубли, слава, верность команды)
-     */
+    private fun playMusic(dialogue: Dialogue) {
+        // Проверяем, играет ли уже музыка
+        mediaPlayer?.apply {
+            if (isPlaying) {
+                stop() // Останавливаем воспроизведение
+                release() // Освобождаем ресурсы
+            }
+        }
+
+        dialogue.musicId?.let { musicId ->
+            val music = musicList.find { it.id == musicId }
+            music?.let { playMusicTrack(it) }
+        }
+    }
+
+    private fun playMusicTrack(music: Music) {
+        mediaPlayer = MediaPlayer.create(context, music.track)
+        mediaPlayer?.isLooping = true // Looping the music track
+        mediaPlayer?.start()
+    }
 
 
     private val dialogues: List<Pair<Int, Dialogue>> = listOf(
 
-        /** ГЛАВА 0 ПРОЛОГ*/
+        /**
+         * В этом коде реализована логика для управления сюжетом.
+         * Основные компоненты кода:
+         * Pair(0 to Dialogue(                                 Пара (индекс диалога, объект диалога)
+         **** text = "",                                     Текст диалога
+         **** options = listOf(                              Опция диалога (список объектов типа опция, представляющий выбор из вариантов ответа (каждый объект вариант)
+         ******* Option(                                     Объект вариант ответа
+         ********** text = "",                               Текст варианта ответа
+         ********** nextDialogueIndex = 1,                   Следующий диалог, при выборе этого варианта
+         ********** resourceEffect = Resource(10, 10, 10)    Эффект на ресурсы (Рубли, слава, верность команды)
+         */
 
 //        0 to Dialogue(
 //            text = "Выберите уровень сложности",
@@ -182,9 +206,12 @@ class GameRepositoryImpl(
 //            )
 //        ),
 
+        /** ГЛАВА 0 ПРОЛОГ*/
+
         0 to Dialogue(
             text = "Санкт-Петербург. 1905 г.",
             scene = scenes[0],
+            musicId = 1,
             options = listOf(
                 Option(
                     text = "Начать новую игру",
@@ -195,27 +222,11 @@ class GameRepositoryImpl(
         ),
 
         1 to Dialogue(
-//            text = getNextBookFragment(), // Получаем следующий фрагмент книги
-            scene = scenes[8],
-            options = listOf(
-                Option(
-                    text = "следующая страница",
-                    nextDialogueIndex = 1, // Оставляем тот же индекс диалога
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-                ),
-                Option(
-                    text = "закрыть книгу",
-                    nextDialogueIndex = 2,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-                )
-            )
-        ),
+            text = "Лучики солнца проникают через занавеску, играя на моем лице...",
+            scene = scenes[1],
 
-//        1 to Dialogue(
-//            text = "Лучики солнца проникают через занавеску, играя на моем лице...",
-//            scene = scenes[1],
-//            options = listOf()
-//        ),
+            options = listOf()
+        ),
 
         2 to Dialogue(
             text = "За последние годы мне многим пришлось пожертвовать и еще большее сделать, чтобы сегодняшний день наступил.",
@@ -320,6 +331,7 @@ class GameRepositoryImpl(
         ),
         13 to Dialogue(
             text = "Благоверная покраснела...",
+            musicId = 0,
             options = listOf(
                 Option(
                     text = "Думаю мне пора, возможно свидимся, Настенька...",
@@ -597,6 +609,7 @@ class GameRepositoryImpl(
         50 to Dialogue(
             text = "** ГУЛЛЬСКИЙ ИНЦИДЕНТ **",
             scene = scenes[5],
+            musicId = 1,
             options = listOf()
         ),
 
@@ -802,13 +815,12 @@ class GameRepositoryImpl(
         106 to Dialogue(
             text = "$bookseller::: Вы ведь русские, да? Скромные 149 Российских Царских рублей господа! Уверяю вас, вы не пожалеете!",
             scene = scenes[6],
-            listOf(
+            options = listOf(
                 Option(
                     text = "Купить книгу (ВНИМАНИЕ! Добавление книги в коллекцию может создать альтернативную историю развития событий)",
                     nextDialogueIndex = 109,
                     resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0),
                     optionFunction = { currentResource.capital += 1 }
-
                 ),
                 Option(
                     text = "Отказаться от покупки",
@@ -843,7 +855,7 @@ class GameRepositoryImpl(
         ),
 
         112 to Dialogue(
-            text = getNextBookFragment(), // Получаем следующий фрагмент книги
+//            text = getNextBookFragment(), // Получаем следующий фрагмент книги
             scene = scenes[8],
             options = listOf(
                 Option(
@@ -963,7 +975,7 @@ class GameRepositoryImpl(
         207 to Dialogue(
             text = "Я открываю последниен страницы книги и в библиографических ссылках смотрю, нет ли знакомых источников. К своему удивлению нахожу книгу, которую начал недавно читать.",
             scene = scenes[4],
-            listOf(
+            options = listOf(
                 Option(
                     text = "Купить книгу (-49 Царских Рублей)",
                     nextDialogueIndex = 208,
@@ -1004,7 +1016,7 @@ class GameRepositoryImpl(
             )
         ),
         211 to Dialogue(
-            text = getNextBookFragment(), // Получаем следующий фрагмент книги
+//            text = getNextBookFragment(), // Получаем следующий фрагмент книги
             options = listOf(
                 Option(
                     text = "следующая страница",
