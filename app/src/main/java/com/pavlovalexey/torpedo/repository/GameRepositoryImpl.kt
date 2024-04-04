@@ -2,6 +2,7 @@ package com.pavlovalexey.torpedo.repository
 
 /** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
 
+import android.app.Activity
 import android.content.Context
 import android.media.MediaPlayer
 import com.pavlovalexey.torpedo.R
@@ -851,8 +852,8 @@ class GameRepositoryImpl(
             text = "Виго, Испания",
             options = listOf(
                 Option(
-                    text = "Следующая глава",
-                    nextDialogueIndex = 151,
+                    text = "...",
+                    nextDialogueIndex = 561,
                 )
             )
         ),
@@ -1083,6 +1084,11 @@ class GameRepositoryImpl(
         560 to Dialogue(
             text = "Цусимское сражение.::",
             options = listOf()
+        ),
+        561 to Dialogue(
+            text = "Продолжение следует...",
+            options = listOf(
+            )
         ),
     )
 }
