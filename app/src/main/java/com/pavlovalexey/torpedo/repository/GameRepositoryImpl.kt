@@ -3,7 +3,8 @@ package com.pavlovalexey.torpedo.repository
 /** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
 
 import android.content.Context
-import android.content.res.Resources
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Characters.admiral
 import com.pavlovalexey.torpedo.model.Characters.anastasia
@@ -18,14 +19,23 @@ import com.pavlovalexey.torpedo.model.Characters.bumblebee
 import com.pavlovalexey.torpedo.model.Characters.next
 import com.pavlovalexey.torpedo.model.Characters.novikov
 
-class GameRepositoryImpl(private val context: Context) : GameRepository {
+class GameRepositoryImpl(
+    private val context: Context,
+    private val resource: Resource
+) : GameRepository {
 
-    private var relationship: Int = 0
     private var capital: Int = 0
     private var necronomicon: Int = 0
     val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
     var currentBookPosition: Int = 300
+    private var _resources = MutableLiveData<Resource>()
+    val resources: LiveData<Resource>
+        get() = _resources
+
+    init {
+        _resources.value = resource // Используем переданный объект resource
+    }
 
     /** определяем сцены по номерам. Каждый номер используется в определенном количестве диалогов, выбор происходит в методе ниже.*/
     private val scenes: List<Scene> = listOf(
@@ -42,6 +52,10 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         Scene(R.drawable.lady00, "10"), // Благоверная невеста
         Scene(R.drawable.lady01, "11"), // Благоверная невеста
     )
+
+    override fun getResource(): Resource {
+        return resource
+    }
 
     /** получаем текущий диалог*/
     override fun getInitialDialogue(): Dialogue {
@@ -63,13 +77,33 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         val dialogue = getDialoguesWithOptions().find { it.first == index }?.second
         dialogue?.let {
             if (index == 112 || index == 560) {
-                /** отмечаем диалоги, в которых будет чтение книги*/
                 val nextFragment = getNextBookFragment()
-                updateDialogueWithNextFragment(it, nextFragment, 0, 0)
+                updateDialogueWithNextFragment(it, nextFragment)
+            }
+            val resourceEffect = it.options.firstOrNull()?.resourceEffect // Получаем эффект ресурсов из первой опции
+            resourceEffect?.let { effect ->
+                updateResources(effect) // Применяем эффект ресурсов к текущим ресурсам
             }
         }
         return dialogue
     }
+
+    fun updateResources(resourceEffect: Resource) {
+        val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        val updatedResource = Resource(
+            currentResource.rubles + resourceEffect.rubles,
+            currentResource.fame + resourceEffect.fame,
+            currentResource.teamLoyalty + resourceEffect.teamLoyalty,
+            currentResource.vodka + resourceEffect.vodka,
+            currentResource.maxim + resourceEffect.maxim,
+            currentResource.capital + resourceEffect.capital,
+            currentResource.necronomicon + resourceEffect.necronomicon,
+            currentResource.neisvestno + resourceEffect.neisvestno,
+            currentResource.relationship + resourceEffect.relationship
+        )
+        _resources.value = updatedResource // Установка обновленных ресурсов
+    }
+
 
     /** получаем текущую сцену*/
     override fun getInitialScene(): Scene {
@@ -92,10 +126,15 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
     }
 
     // Функция для обновления текста диалога на основе последнего прочитанного фрагмента книги
-    fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String, relationshipEffect: Int = 0, capitalEffect: Int = 0) {
+    fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
         dialogue.text = nextFragment
-        relationship += relationshipEffect
-        capital += capitalEffect
+    }
+
+    fun getFrashRelationship(): Int {
+        val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        val currentRelationship = currentResource.relationship
+        return currentRelationship
+
     }
 
     /**
@@ -246,28 +285,25 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                 Option(
                     text = "Клянусь тебе, душа моя, я ни дня не перестану думать о тебе в походе! И даже ночью ты будешь приходить ко мне во снах",
                     nextDialogueIndex = 13,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, +1),
                 )
             ),
-            dialogFunction = { relationship + 1 }
         ),
 
         13 to Dialogue(
-            text = if (relationship < 0) {
-                "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
-            } else if (relationship == 0) {
-                "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
-            } else if (relationship > 0) {
-                "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
-            } else {
-                "$anastasia::: ..."
+
+            text = when (getFrashRelationship()) {
+                -1 -> "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
+                0 -> "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
+                1 -> "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
+                else -> "..."
             },
             scene = scenes[10],
             options = listOf(
                 Option(
                     text = "Думаю мне пора, возможно свидимся, Настенька...",
                     nextDialogueIndex = 14,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
+                    resourceEffect = Resource(5, 5, 5, 5, 5, 5, 5, 5, 5),
                 ),
                 Option(
                     text = "Я привезу тебе заморских сувениров, возможно красивое шёлковое кимоно",
@@ -281,11 +317,11 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 )
             ),
-            dialogFunction = { relationship + 1 }
         ),
 
         14 to Dialogue(
-            text = when (relationship) {
+//            dialogFunction = {relationship = resources.relationship},
+            text = when (getFrashRelationship()) {
                 -2 -> "$anastasia::: Категорически согластна с тем, что тебе пора... "
                 -1 -> "$anastasia::: Думаю, тебе пора..."
                 0 -> "$anastasia::: ..."
@@ -295,7 +331,7 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
             },
             scene = scenes[10],
             options = listOf(
-                when (relationship) {
+                when (getFrashRelationship()) {
                     -2 -> Option(
                         text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
                         nextDialogueIndex = 18,
@@ -335,7 +371,19 @@ class GameRepositoryImpl(private val context: Context) : GameRepository {
         ),
 
         18 to Dialogue(
-            text = "Покидаю Петербург... $relationship",
+            text = "Покидаю Петербург... ${
+                _resources.value ?: Resource(
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ).relationship
+            } ... ${getFrashRelationship()}",
             scene = scenes[0],
             options = listOf(
                 Option(

@@ -8,7 +8,8 @@ import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.repository.GameRepository
 
-class MainViewModel(val gameRepository: GameRepository) : ViewModel() {
+class MainViewModel(private val resource: Resource, val gameRepository: GameRepository) : ViewModel() {
+
     private val _currentDialogueIndex = MutableLiveData(0)
     val currentDialogueIndex: LiveData<Int>
         get() = _currentDialogueIndex
@@ -17,13 +18,17 @@ class MainViewModel(val gameRepository: GameRepository) : ViewModel() {
     val currentScene: LiveData<Scene>
         get() = _currentScene
 
-    private val _resources = MutableLiveData<Resource>()
+    private val _resources = MutableLiveData<Resource>() // Удаляем инициализацию, так как передаем объект через конструктор
     val resources: LiveData<Resource>
         get() = _resources
 
     init {
         _currentScene.value = gameRepository.getInitialScene()
-        _resources.value = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        _resources.value = resource // Используем переданный объект resource
+    }
+
+    fun getResourceFromViewModel(): Resource {
+        return _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
     }
 
     fun selectOption(optionIndex: Int) {
