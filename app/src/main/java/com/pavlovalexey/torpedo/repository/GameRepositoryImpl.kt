@@ -26,7 +26,7 @@ class GameRepositoryImpl(
     private var currentResource: Resource = initialResource
     private val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
-    private var currentBookPosition: Int = 1
+    private var currentBookPosition: Int = 0
     private var lastUsedScene: Scene? = null
     private val scenes: List<Scene> = Scenes.list
 
@@ -62,15 +62,16 @@ class GameRepositoryImpl(
 
     override fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
         dialogue.apply {
-            text = nextFragment
             scene = lastUsedScene
         }
+        dialogue.text = lastReadFragment
     }
 
     override fun getDialogueByIndex(index: Int): Dialogue? {
         val dialogue = dialogues.find { it.first == index }?.second
         dialogue?.let {
-            if (index == 112 || index == 560) {
+            if (index == 1 || index == 112 || index == 211) {
+                /** отмечаем диалоги, в которых будет чтение книги*/
                 val nextFragment = getNextBookFragment()
                 updateDialogueWithNextFragment(it, nextFragment)
             }
@@ -84,8 +85,8 @@ class GameRepositoryImpl(
     }
 
     override fun getNextBookFragment(): String {
-        currentBookPosition += 100
-        val endIndex = currentBookPosition + 300
+        currentBookPosition += 300 // Используем фиксированное значение для увеличения позиции чтения
+        val endIndex = currentBookPosition + 900 // Изменяем конечную позицию чтения
         lastReadFragment = if (currentBookPosition < bookText.length) {
             if (endIndex < bookText.length) {
                 bookText.substring(currentBookPosition, endIndex)
@@ -93,9 +94,12 @@ class GameRepositoryImpl(
                 bookText.substring(currentBookPosition)
             }
         } else {
-            "Книга прочитана"
+            "Конец книги"
         }
-        return lastReadFragment
+        lastReadFragment += "---"
+
+
+        return lastReadFragment // Возвращаем последний прочитанный фрагмент книги
     }
 
     /**
@@ -115,232 +119,290 @@ class GameRepositoryImpl(
 
         /** ГЛАВА 0 ПРОЛОГ*/
 
+//        0 to Dialogue(
+//            text = "Выберите уровень сложности",
+//            scene = scenes[0],
+//            options = listOf(
+//                Option(
+//                    text = "Легкое испытание",
+//                    nextDialogueIndex = 1
+//                ),
+//                Option(
+//                    text = "Трудный поход",
+//                    nextDialogueIndex = 2
+//                ),
+//                Option(
+//                    text = "Стальная воля",
+//                    nextDialogueIndex = 3
+//                )
+//            )
+//        ),
+//        1 to Dialogue(
+//            text = "Начало игры в режиме Легкое испытание (Начальные ресурсы: 120%. Частота испытаний: 60%)",
+//            options = listOf(
+//                Option(
+//                    text = "назад",
+//                    nextDialogueIndex = 0
+//                ),
+//                Option(
+//                    text = "далее",
+//                    nextDialogueIndex = 4,
+//                    resourceEffect = Resource(4500, 6, 0, 0, 0, 0, 0, 0, 0)
+//                )
+//            )
+//        ),
+//
+//        2 to Dialogue(
+//            text = "Начало игры в режиме Трудный поход (Начальные ресурсы: 100%. Частота испытаний: 80%)",
+//            options = listOf(
+//                Option(
+//                    text = "назад",
+//                    nextDialogueIndex = 0
+//                ),
+//                Option(
+//                    text = "далее",
+//                    nextDialogueIndex = 4,
+//                    resourceEffect = Resource(3000, 5, 0, 0, 0, 0, 0, 0, 0)
+//                )
+//            )
+//        ),
+//
+//        3 to Dialogue(
+//            text = "Начало игры в режиме Стальная воля (Начальные ресурсы: 80%. Частота испытаний: 100%. Один слот для сохранений.)",
+//            options = listOf(
+//                Option(
+//                    text = "назад",
+//                    nextDialogueIndex = 0
+//                ),
+//                Option(
+//                    text = "далее",
+//                    nextDialogueIndex = 4,
+//                    resourceEffect = Resource(2400, 4, 0, 0, 0, 0, 0, 0, 0)
+//                )
+//            )
+//        ),
+
         0 to Dialogue(
-            text = "Выберите уровень сложности",
+            text = "Санкт-Петербург. 1905 г.",
             scene = scenes[0],
             options = listOf(
                 Option(
-                    text = "Легкое испытание",
-                    nextDialogueIndex = 1
+                    text = "Начать новую игру",
+                    nextDialogueIndex = 1,
+                    resourceEffect = Resource(2000, 4, 0, 0, 0, 0, 0, 0, 0),
                 ),
-                Option(
-                    text = "Трудный поход",
-                    nextDialogueIndex = 2
-                ),
-                Option(
-                    text = "Стальная воля",
-                    nextDialogueIndex = 3
-                )
             )
         ),
+
         1 to Dialogue(
-            text = "Начало игры в режиме Легкое испытание (Начальные ресурсы: 120%. Частота испытаний: 60%)",
+//            text = getNextBookFragment(), // Получаем следующий фрагмент книги
+            scene = scenes[8],
             options = listOf(
                 Option(
-                    text = "назад",
-                    nextDialogueIndex = 0
+                    text = "следующая страница",
+                    nextDialogueIndex = 1, // Оставляем тот же индекс диалога
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                 ),
                 Option(
-                    text = "далее",
-                    nextDialogueIndex = 4,
-                    resourceEffect = Resource(4500, 6, 0, 0, 0, 0, 0, 0, 0)
+                    text = "закрыть книгу",
+                    nextDialogueIndex = 2,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                 )
             )
         ),
+
+//        1 to Dialogue(
+//            text = "Лучики солнца проникают через занавеску, играя на моем лице...",
+//            scene = scenes[1],
+//            options = listOf()
+//        ),
 
         2 to Dialogue(
-            text = "Начало игры в режиме Трудный поход (Начальные ресурсы: 100%. Частота испытаний: 80%)",
-            options = listOf(
-                Option(
-                    text = "назад",
-                    nextDialogueIndex = 0
-                ),
-                Option(
-                    text = "далее",
-                    nextDialogueIndex = 4,
-                    resourceEffect = Resource(3000, 5, 0, 0, 0, 0, 0, 0, 0)
-                )
-            )
-        ),
-
-        3 to Dialogue(
-            text = "Начало игры в режиме Стальная воля (Начальные ресурсы: 80%. Частота испытаний: 100%. Один слот для сохранений.)",
-            options = listOf(
-                Option(
-                    text = "назад",
-                    nextDialogueIndex = 0
-                ),
-                Option(
-                    text = "далее",
-                    nextDialogueIndex = 4,
-                    resourceEffect = Resource(2400, 4, 0, 0, 0, 0, 0, 0, 0)
-                )
-            )
-        ),
-
-        4 to Dialogue(
-            text = "Лучики солнца проникают через занавеску, играя на моем лице...",
-            scene = scenes[1],
-            options = listOf()
-        ),
-
-        5 to Dialogue(
             text = "За последние годы мне многим пришлось пожертвовать и еще большее сделать, чтобы сегодняшний день наступил.",
             options = listOf()
         ),
 
-        6 to Dialogue(
+        3 to Dialogue(
             text = "В адмиралтействе я получили документы и приказ о назначении капитаном, ближайшим рейсом отправляюсь в порт Либава",
             options = listOf()
         ),
 
-        7 to Dialogue(
+        4 to Dialogue(
             text = "В Либаве расквартирована Вторая Тихоокеанская эскадра и мой корабль - эскадренный миноносец Грозный",
             options = listOf()
         ),
 
-        8 to Dialogue(
+        5 to Dialogue(
             text = "Корабль, на котором я иду на войну...",
             scene = scenes[1],
             options = listOf()
         ),
 
-        9 to Dialogue(
+        6 to Dialogue(
             text = "Пора пращаться с благоверной невестой...",
             scene = scenes[1],
             options = listOf()
         ),
 
-        10 to Dialogue(
+        7 to Dialogue(
             text = "$anastasia::: Почему на войну идешь именно ты?! Почему ни кто-то другой?!",
             scene = scenes[10],
             options = listOf()
         ),
 
-        11 to Dialogue(
-            text = "Потому-что это мой долг, я офицер флота. \n\n" +
-                    "А кроме того, благодаря этому назначению я стану капитаном корабля, КАПИТАНОМ, ты понимаешь? ",
-            scene = scenes[10],
+        8 to Dialogue(
+            text = "Разговор общает быть не простым... Стараюсь сохранить спокойствие и сгладить углы перед прощанием...",
             options = listOf()
         ),
 
-        12 to Dialogue(
+        9 to Dialogue(
+            text = " - Потому-что это мой долг, дорогая... Твой жених офицер флота... \n\n" +
+                    "А кроме того, благодаря этому назначению я стал еще и капитаном корабля, КАПИТАНОМ, ты понимаешь? ",
+            options = listOf()
+        ),
+
+        10 to Dialogue(
             text = "$anastasia::: И что же мне теперь, быть вдовой капитана и радоваться этому?",
-            scene = scenes[10],
             options = listOf(
                 Option(
                     text = "Такова твоя женская доля, милая",
-                    nextDialogueIndex = 13,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
-                    optionFunction = {currentResource.capital += 1}
+                    nextDialogueIndex = 11,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
                 ),
                 Option(
                     text = "Ты будешь радоваться моим успехом и праздновать вместе со мной победу!",
-                    nextDialogueIndex = 13
+                    nextDialogueIndex = 12
                 ),
                 Option(
                     text = "Клянусь тебе, душа моя, я ни дня не перестану думать о тебе в походе! И даже ночью ты будешь приходить ко мне во снах",
                     nextDialogueIndex = 13,
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
-                    optionFunction = {currentResource.relationship += 1}
                 )
             ),
         ),
-
-        13 to Dialogue(
-            text = when (currentResource.relationship) {
-                -1 -> "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
-                0 -> "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
-                1 -> "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
-                else -> "..."
-            },
-            scene = scenes[10],
+        11 to Dialogue(
+            text = "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?",
             options = listOf(
                 Option(
                     text = "Думаю мне пора, возможно свидимся, Настенька...",
                     nextDialogueIndex = 14,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
-                    optionFunction = {
-                        currentResource.relationship += 1
-                        currentResource.rubles += 10000
-                    }
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
                 ),
                 Option(
-                    text = "Я привезу тебе заморских сувениров, возможно красивое шёлковое кимоно",
-                    nextDialogueIndex = 14,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
+                    text = "Ты будешь радоваться моим успехом и праздновать вместе со мной победу!",
+                    nextDialogueIndex = 15
                 ),
                 Option(
-                    text = "Благодаря твоей горячей любви я смогу выбраться из пекла войны и вернуться к тебе живым, " +
-                            "и мы отпразнуем достойную свадьбу!",
-                    nextDialogueIndex = 14,
+                    text = "Клянусь тебе, душа моя, я ни дня не перестану думать о тебе в походе! И даже ночью ты будешь приходить ко мне во снах",
+                    nextDialogueIndex = 16,
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 )
             ),
-            dialogFunction = {currentResource.capital += 1},
         ),
-
-        14 to Dialogue(
-            dialogFunction = {currentResource.relationship += 1},
-            text = when (currentResource.relationship) {
-                -2 -> "$anastasia::: Категорически согластна с тем, что тебе пора... "
-                -1 -> "$anastasia::: Думаю, тебе пора..."
-                0 -> "$anastasia::: ..."
-                1 -> "Благоверная меня обнимает и после ужина мы расстаемся."
-                2 -> "Благоверная меня обнимает и после ужина мы расстаемся. Она обещает, что найдет способ отправить мне весточку"
-                else -> "$anastasia::: ..."
-            },
-            scene = scenes[10],
-            options = listOf(
-                when (currentResource.relationship) {
-                    -2 -> Option(
-                        text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
-                        nextDialogueIndex = 18,
-                        resourceEffect = Resource(-300, 0, 0, 0, 0, 0, 0, 0, 2)
-                    )
-
-                    -1 -> Option(
-                        text = "С чувством горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале",
-                        nextDialogueIndex = 18,
-                        resourceEffect = Resource(-100, 0, 0, 0, 0, 0, 0, 0, 1)
-                    )
-
-                    0 -> Option(
-                        text = "Покидаю дом Насти и возвращаюсь домой",
-                        nextDialogueIndex = 18,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-                    )
-
-                    1 -> Option(
-                        text = "С чувством покоя возвращаюсь домой",
-                        nextDialogueIndex = 18,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1)
-                    )
-
-                    2 -> Option(
-                        text = "С чувством покоя возвращаюсь домой",
-                        nextDialogueIndex = 18,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -2)
-                    )
-
-                    else -> Option(
-                        text = "...",
-                        nextDialogueIndex = 18
-                    )
-                }
-            )
-        ),
-
-        18 to Dialogue(
-            text = "Покидаю Петербург... ${currentResource} ... ${getResource()}",
-            scene = scenes[0],
+        12 to Dialogue(
+            text = "$anastasia::: Надеюсь победа не будет стоить тебе жизни...",
             options = listOf(
                 Option(
-                    text = next,
-                    nextDialogueIndex = 19
+                    text = "Думаю мне пора, возможно свидимся, Настенька...",
+                    nextDialogueIndex = 15,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
+                ),
+                Option(
+                    text = "Я привезу тебе заморских сувениров, возможно красивое шёлковое кимоно!",
+                    nextDialogueIndex = 16
+                ),
+                Option(
+                    text = "Клянусь тебе, душа моя, я ни дня не перестану думать о тебе в походе! И даже ночью ты будешь приходить ко мне во снах",
+                    nextDialogueIndex = 17,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
+                )
+            ),
+        ),
+        13 to Dialogue(
+            text = "Благоверная покраснела...",
+            options = listOf(
+                Option(
+                    text = "Думаю мне пора, возможно свидимся, Настенька...",
+                    nextDialogueIndex = 16,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
+                ),
+                Option(
+                    text = "Ты будешь радоваться моим успехом и праздновать вместе со мной победу!",
+                    nextDialogueIndex = 17,
+                ),
+                Option(
+                    text = "Благодаря твоей горячей любви я смогу выбраться из пекла войны и вернуться к тебе живым, и мы отпразнуем достойную свадьбу!",
+                    nextDialogueIndex = 18,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
+                )
+            ),
+        ),
+        14 to Dialogue(
+            text = "Категорически согластна с тем, что тебе пора...",
+            scene = scenes[10],
+            options = listOf(
+                Option(
+                    text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
+                    nextDialogueIndex = 19,
+                    resourceEffect = Resource(-300, 0, 0, 0, 0, 0, 0, 0, 2)
                 )
             )
         ),
+        15 to Dialogue(
+            text = "Думаю, тебе пора...",
+            scene = scenes[10],
+            options = listOf(
+                Option(
+                    text = "С чувством горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале",
+                    nextDialogueIndex = 19,
+                    resourceEffect = Resource(-100, 0, 0, 0, 0, 0, 0, 0, 1)
+                )
+            )
+        ),
+        16 to Dialogue(
+            text = "Надеюсь ты вернешься живым...",
+            scene = scenes[10],
+            options = listOf(
+                Option(
+                    text = "Со смешенными чувствами покидаю дом Насти и возвращаюсь домой",
+                    nextDialogueIndex = 19,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                )
+            )
+        ),
+        17 to Dialogue(
+            text = "Благоверная меня обнимает и после ужина мы расстаемся.",
+            scene = scenes[10],
+            options = listOf(
+                Option(
+                        text = "С чувством покоя возвращаюсь домой",
+                    nextDialogueIndex = 19,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1)
+                )
+            )
+        ),
+        18 to Dialogue(
+            text = "Благоверная меня обнимает и после ужина мы с трудом расстаемся. В слезах она обещает, что за меня словечко батеньке адмиралу...",
+            scene = scenes[10],
+            options = listOf(
+                Option(
+                        text = "С чувством покоя возвращаюсь домой",
+                        nextDialogueIndex = 19,
+                        resourceEffect = Resource(0, 1, 0, 0, 0, 0, 0, 0, -2)
+                )
+            )
+        ),
+
+//        18 to Dialogue(
+//            text = "Покидаю Петербург... ${currentResource} ... ${getResource()}",
+//            scene = scenes[0],
+//            options = listOf(
+//                Option(
+//                    text = next,
+//                    nextDialogueIndex = 19
+//                )
+//            )
+//        ),
 
 
         /** ГЛАВА 1 ОТПЛЫТИЕ*/
