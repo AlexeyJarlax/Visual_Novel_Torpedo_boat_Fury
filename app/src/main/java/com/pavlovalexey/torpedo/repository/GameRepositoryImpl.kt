@@ -16,6 +16,7 @@ import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Characters.bumblebee
 import com.pavlovalexey.torpedo.model.Characters.next
 import com.pavlovalexey.torpedo.model.Characters.novikov
+import com.pavlovalexey.torpedo.model.Scenes
 
 class GameRepositoryImpl(
     private val context: Context,
@@ -23,34 +24,22 @@ class GameRepositoryImpl(
 ) : GameRepository {
 
     private var currentResource: Resource = initialResource
-    val bookText = context.getString(R.string.kapital)
+    private val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
-    var currentBookPosition: Int = 300
-
-
-    /** определяем сцены по номерам. Каждый номер используется в определенном количестве диалогов, выбор происходит в методе ниже.*/
-    private val scenes: List<Scene> = listOf(
-        Scene(R.drawable.scen_spb1, "0"), // Петербург
-        Scene(R.drawable.scen_spb2, "1"), // Петербург
-        Scene(R.drawable.scen_ships03, "2"), // Корабль
-        Scene(R.drawable.scen_ships06, "3"), // Корабль
-        Scene(R.drawable.scen_ships04, "4"), // Корабль
-        Scene(R.drawable.scen_ships08, "5"), // Корабль
-        Scene(R.drawable.bookseller2, "6"), // bookseller помещение
-        Scene(R.drawable.bookseller5, "7"), // bookseller улица
-        Scene(R.drawable.book, "8"), // book
-        Scene(R.drawable.char12, "9"), // Капитан-поручик Резцов - офицер разведки
-        Scene(R.drawable.lady00, "10"), // Благоверная невеста
-        Scene(R.drawable.lady01, "11"), // Благоверная невеста
-    )
+    private var currentBookPosition: Int = 1
+    private var lastUsedScene: Scene? = null
+    private val scenes: List<Scene> = Scenes.list
 
     override fun getInitialDialogue(): Dialogue {
-        return dialogues.firstOrNull()?.second
-            ?: throw IllegalStateException("No initial dialogues available")
+        return dialogues.firstOrNull()?.second?.apply {
+            lastUsedScene = scene
+        } ?: throw IllegalStateException("диалоги недоступны")
     }
 
     override fun getInitialScene(): Scene {
-        return scenes.first()
+        return scenes.firstOrNull()?.apply {
+            lastUsedScene = this
+        } ?: throw IllegalStateException("сцены недоступны")
     }
 
     override fun getResource(): Resource {
@@ -72,7 +61,10 @@ class GameRepositoryImpl(
     }
 
     override fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
-        dialogue.text = nextFragment
+        dialogue.apply {
+            text = nextFragment
+            scene = lastUsedScene
+        }
     }
 
     override fun getDialogueByIndex(index: Int): Dialogue? {
@@ -86,6 +78,7 @@ class GameRepositoryImpl(
             resourceEffect?.let { effect ->
                 updateResources(effect)
             }
+            lastUsedScene = it.scene ?: lastUsedScene
         }
         return dialogue
     }
@@ -100,7 +93,7 @@ class GameRepositoryImpl(
                 bookText.substring(currentBookPosition)
             }
         } else {
-            "End of the book"
+            "Книга прочитана"
         }
         return lastReadFragment
     }
@@ -142,7 +135,6 @@ class GameRepositoryImpl(
         ),
         1 to Dialogue(
             text = "Начало игры в режиме Легкое испытание (Начальные ресурсы: 120%. Частота испытаний: 60%)",
-            scene = scenes[0],
             options = listOf(
                 Option(
                     text = "назад",
@@ -158,7 +150,6 @@ class GameRepositoryImpl(
 
         2 to Dialogue(
             text = "Начало игры в режиме Трудный поход (Начальные ресурсы: 100%. Частота испытаний: 80%)",
-            scene = scenes[0],
             options = listOf(
                 Option(
                     text = "назад",
@@ -174,7 +165,6 @@ class GameRepositoryImpl(
 
         3 to Dialogue(
             text = "Начало игры в режиме Стальная воля (Начальные ресурсы: 80%. Частота испытаний: 100%. Один слот для сохранений.)",
-            scene = scenes[0],
             options = listOf(
                 Option(
                     text = "назад",
@@ -196,19 +186,16 @@ class GameRepositoryImpl(
 
         5 to Dialogue(
             text = "За последние годы мне многим пришлось пожертвовать и еще большее сделать, чтобы сегодняшний день наступил.",
-            scene = scenes[1],
             options = listOf()
         ),
 
         6 to Dialogue(
             text = "В адмиралтействе я получили документы и приказ о назначении капитаном, ближайшим рейсом отправляюсь в порт Либава",
-            scene = scenes[1],
             options = listOf()
         ),
 
         7 to Dialogue(
             text = "В Либаве расквартирована Вторая Тихоокеанская эскадра и мой корабль - эскадренный миноносец Грозный",
-            scene = scenes[1],
             options = listOf()
         ),
 
@@ -261,7 +248,7 @@ class GameRepositoryImpl(
         ),
 
         13 to Dialogue(
-            text = when (getResource().relationship) {
+            text = when (currentResource.relationship) {
                 -1 -> "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
                 0 -> "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
                 1 -> "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
@@ -272,8 +259,10 @@ class GameRepositoryImpl(
                 Option(
                     text = "Думаю мне пора, возможно свидимся, Настенька...",
                     nextDialogueIndex = 14,
-                    resourceEffect = Resource(5, 5, 5, 5, 5, 5, 5, 5, 5),
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                     optionFunction = {
+                        currentResource.relationship += 1
+                        currentResource.rubles += 10000
                     }
                 ),
                 Option(
@@ -288,7 +277,7 @@ class GameRepositoryImpl(
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 )
             ),
-            dialogFunction = {},
+            dialogFunction = {currentResource.capital += 1},
         ),
 
         14 to Dialogue(
@@ -343,7 +332,7 @@ class GameRepositoryImpl(
         ),
 
         18 to Dialogue(
-            text = "Покидаю Петербург... ${currentResource} ... ${getResource().relationship}",
+            text = "Покидаю Петербург... ${currentResource} ... ${getResource()}",
             scene = scenes[0],
             options = listOf(
                 Option(
@@ -726,46 +715,46 @@ class GameRepositoryImpl(
             options = listOf()
         ),
 
-//        105 to Dialogue(
-//            text = "Торговец открывает одну из полок его большого письменного стола ключом и достает толстую книгу, протягивая ее мне, так как я стоял ближе",
-//            scene = scenes[6],
-//            options = if (capital > 1) { // Проверяем значение
-//                listOf(
-//                    Option(
-//                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу я читал, и интереса она не представляет",
-//                        nextDialogueIndex = 110,
-//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-//                    ),
-//                )
-//            } else {
-//                listOf(
-//                    Option(
-//                        text = "На незнакомой обложке красуется название: Капитал. Автор книги: Карл Маркс...",
-//                        nextDialogueIndex = 106,
-//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-//                    )
-//                )
-//            },
-//        ),
+        105 to Dialogue(
+            text = "Торговец открывает одну из полок его большого письменного стола ключом и достает толстую книгу, протягивая ее мне, так как я стоял ближе",
+            scene = scenes[6],
+            options = if (currentResource.capital > 1) { // Проверяем значение
+                listOf(
+                    Option(
+                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу я читал, и интереса она не представляет",
+                        nextDialogueIndex = 110,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                    ),
+                )
+            } else {
+                listOf(
+                    Option(
+                        text = "На незнакомой обложке красуется название: Капитал. Автор книги: Карл Маркс...",
+                        nextDialogueIndex = 106,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                    )
+                )
+            },
+        ),
 
-//        106 to Dialogue(
-//            text = "$bookseller::: Вы ведь русские, да? Скромные 149 Российских Царских рублей господа! Уверяю вас, вы не пожалеете!",
-//            scene = scenes[6],
-//            listOf(
-//                Option(
-//                    text = "Купить книгу (ВНИМАНИЕ! Добавление книги в коллекцию может создать альтернативную историю развития событий)",
-//                    nextDialogueIndex = 109,
-//                    resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0),
-//                    optionFunction = { setCapital(+1) }
-//
-//                ),
-//                Option(
-//                    text = "Отказаться от покупки",
-//                    nextDialogueIndex = 110,
-//                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-//                )
-//            )
-//        ),
+        106 to Dialogue(
+            text = "$bookseller::: Вы ведь русские, да? Скромные 149 Российских Царских рублей господа! Уверяю вас, вы не пожалеете!",
+            scene = scenes[6],
+            listOf(
+                Option(
+                    text = "Купить книгу (ВНИМАНИЕ! Добавление книги в коллекцию может создать альтернативную историю развития событий)",
+                    nextDialogueIndex = 109,
+                    resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0),
+                    optionFunction = { currentResource.capital += 1 }
+
+                ),
+                Option(
+                    text = "Отказаться от покупки",
+                    nextDialogueIndex = 110,
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                )
+            )
+        ),
 
         109 to Dialogue(
             text = "Расчитавшись с торговцем беру книгу из его морщинистых рук...",
@@ -781,7 +770,7 @@ class GameRepositoryImpl(
 
         111 to Dialogue(
             text = "Конец дня, я могу уединиться в своей каюте и полистать одну из книг коллекции",
-            scene = scenes[4],
+            scene = scenes[8],
             options = listOf(
                 Option(
                     text = "(чтение книг происходит автоматически в конце главы, оно не влияет на сюжет и может быть пропущено)",
@@ -886,28 +875,28 @@ class GameRepositoryImpl(
             options = listOf()
         ),
 
-//        206 to Dialogue(
-//            text = "Ходебщик разворачивает перекидной мешок, и достает толстую книгу, протягивая ее мне",
-//            scene = scenes[4],
-//            options = if (capital > 1) { // Проверяем значение
-//                listOf(
-//                    Option(
-//                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу читал, и она не представляет интереса",
-//                        nextDialogueIndex = 209,
-//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                    ),
-//                )
-//            } else {
-//                listOf(
-//                    Option(
-//                        text = "На незнакомой обложке красуется название: Что делать? Наболевшие вопросы нашего движения» — В. И. Ленин",
-//                        nextDialogueIndex = 207,
-//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
-////                        NotUsingThisCaseIfCapitalIsTrue = true // Устанавливаем значение, блокирующее этот вариант ответа для случая, если книга Капитал уже имеется
-//                    )
-//                )
-//            },
-//        ),
+        206 to Dialogue(
+            text = "Ходебщик разворачивает перекидной мешок, и достает толстую книгу, протягивая ее мне",
+            scene = scenes[4],
+            options = if (currentResource.capital > 1) { // Проверяем значение
+                listOf(
+                    Option(
+                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу читал, и она не представляет интереса",
+                        nextDialogueIndex = 209,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    ),
+                )
+            } else {
+                listOf(
+                    Option(
+                        text = "На незнакомой обложке красуется название: Что делать? Наболевшие вопросы нашего движения» — В. И. Ленин",
+                        nextDialogueIndex = 207,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
+//                        NotUsingThisCaseIfCapitalIsTrue = true // Устанавливаем значение, блокирующее этот вариант ответа для случая, если книга Капитал уже имеется
+                    )
+                )
+            },
+        ),
 
         207 to Dialogue(
             text = "Я открываю последниен страницы книги и в библиографических ссылках смотрю, нет ли знакомых источников. К своему удивлению нахожу книгу, которую начал недавно читать.",
@@ -938,8 +927,30 @@ class GameRepositoryImpl(
             options = listOf(
                 Option(
                     text = "Следующая глава",
-                    nextDialogueIndex = 301,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                    nextDialogueIndex = 210,
+                )
+            )
+        ),
+        210 to Dialogue(
+            text = "Конец дня, я могу уединиться в своей каюте и полистать одну из книг коллекции",
+            scene = scenes[8],
+            options = listOf(
+                Option(
+                    text = "(чтение книг происходит автоматически в конце главы, оно не влияет на сюжет и может быть пропущено)",
+                    nextDialogueIndex = 211
+                )
+            )
+        ),
+        211 to Dialogue(
+            text = getNextBookFragment(), // Получаем следующий фрагмент книги
+            options = listOf(
+                Option(
+                    text = "следующая страница",
+                    nextDialogueIndex = 211,
+                ),
+                Option(
+                    text = "закрыть книгу",
+                    nextDialogueIndex = 301
                 )
             )
         ),

@@ -31,8 +31,8 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
         selectedOption?.let { option ->
-            val resourceEffect = option.resourceEffect ?: Resource(9, 9, 9, 9, 9, 9, 9, 9, 9) // Ресурс по умолчанию
-            gameRepository.updateResources(resourceEffect) // Обновляем ресурсы в репозитории с передачей объекта resourceEffect
+            val resourceEffect = option.resourceEffect ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Ресурс по умолчанию
+
             val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
             _resources.value = Resource(
                 currentResource.rubles + resourceEffect.rubles,
@@ -45,6 +45,8 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
                 currentResource.neisvestno + resourceEffect.neisvestno,
                 currentResource.relationship + resourceEffect.relationship
             )
+            gameRepository.updateResources(currentResource)
+            gameRepository.updateResources(option.resourceEffect ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0))
             // Получаем следующую сцену для диалога
             val nextDialogueIndex = option.nextDialogueIndex
             val nextScene = gameRepository.getDialogueByIndex(nextDialogueIndex ?: 1)?.scene
