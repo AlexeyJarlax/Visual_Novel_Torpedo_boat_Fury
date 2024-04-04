@@ -85,8 +85,8 @@ class GameRepositoryImpl(
     }
 
     override fun getNextBookFragment(): String {
-        currentBookPosition += 300 // Используем фиксированное значение для увеличения позиции чтения
-        val endIndex = currentBookPosition + 900 // Изменяем конечную позицию чтения
+        currentBookPosition += 200 // Используем фиксированное значение для увеличения позиции чтения
+        val endIndex = currentBookPosition + 600 // Изменяем конечную позицию чтения
         lastReadFragment = if (currentBookPosition < bookText.length) {
             if (endIndex < bookText.length) {
                 bookText.substring(currentBookPosition, endIndex)

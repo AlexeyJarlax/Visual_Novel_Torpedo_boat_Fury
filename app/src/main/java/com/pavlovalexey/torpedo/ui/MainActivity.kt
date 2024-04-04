@@ -43,12 +43,13 @@ package com.pavlovalexey.torpedo.ui
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.text.style.UnderlineSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -165,22 +166,42 @@ class MainActivity : AppCompatActivity() {
         val currentDialogue =
             mainViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
 
-// Разделение текста диалога на части до и после "::"
-        val parts = currentDialogue.text?.split("::")
-        val formattedText = if (parts?.size == 2) {
-            val underlinedText = parts[0] // Текст, который нужно подчеркнуть
+        // Разделение текста диалога на части до и после "::" и "--"
+        val partsColon = currentDialogue.text?.split("::")
+        val partsDash = currentDialogue.text?.split("--")
+        val parts = if (partsColon != null && partsColon.size == 2) {
+            partsColon
+        } else if (partsDash != null && partsDash.size == 2) {
+            partsDash
+        } else {
+            null
+        }
+
+        val formattedText = if (parts != null && parts.size == 2) {
+            val highlightedText = parts[0] // Текст, который нужно подчеркнуть
             val remainingText = parts[1] // Оставшаяся часть текста
-            // Формирование отформатированного текста с подчеркнутой и голубой частью
+
+            // Формирование отформатированного текста с подчеркнутой и цветной частью
             SpannableStringBuilder().apply {
-                append(underlinedText)
-                setSpan(UnderlineSpan(), 0, underlinedText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                append(highlightedText)
+                setSpan(
+                    StyleSpan(Typeface.ITALIC), // Установка стиля курсива
+                    0,
+                    highlightedText.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                // Выбор светло оранжевого цвета для текста после разделителя
                 setSpan(
                     ForegroundColorSpan(
                         ContextCompat.getColor(
                             this@MainActivity,
-                            R.color.yp_blue_light
+                            R.color.aquamarine
                         )
-                    ), 0, underlinedText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    ),
+                    0,
+                    highlightedText.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 append(remainingText)
             }
