@@ -3,8 +3,6 @@ package com.pavlovalexey.torpedo.repository
 /** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Characters.admiral
 import com.pavlovalexey.torpedo.model.Characters.anastasia
@@ -21,15 +19,14 @@ import com.pavlovalexey.torpedo.model.Characters.novikov
 
 class GameRepositoryImpl(
     private val context: Context,
-    private val resource: Resource
+    private val initialResource: Resource
 ) : GameRepository {
 
-    private var capital: Int = 0
-    private var necronomicon: Int = 0
+    private var currentResource: Resource = initialResource
     val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
     var currentBookPosition: Int = 300
-    val resources: Resource = resource
+
 
     /** определяем сцены по номерам. Каждый номер используется в определенном количестве диалогов, выбор происходит в методе ниже.*/
     private val scenes: List<Scene> = listOf(
@@ -47,70 +44,55 @@ class GameRepositoryImpl(
         Scene(R.drawable.lady01, "11"), // Благоверная невеста
     )
 
-    override fun getResource(): Resource {
-        return resource
-    }
-
-    /** получаем текущий диалог*/
     override fun getInitialDialogue(): Dialogue {
         return dialogues.firstOrNull()?.second
-            ?: throw IllegalStateException("Доступных диалогов нет")
+            ?: throw IllegalStateException("No initial dialogues available")
     }
 
-    // Функция для получения диалогов с опциями на основе capital
-    private fun getDialoguesWithOptions(): List<Pair<Int, Dialogue>> {
-        return dialogues.map { (index, dialogue) ->
-            index to dialogue.copy(
-                options = dialogue.options
-            )
-        }
+    override fun getInitialScene(): Scene {
+        return scenes.first()
     }
 
-    /** получаем индекс диалога*/
+    override fun getResource(): Resource {
+        return currentResource
+    }
+
+    override fun updateResources(resourceEffect: Resource) {
+        currentResource = Resource(
+            currentResource.rubles + resourceEffect.rubles,
+            currentResource.fame + resourceEffect.fame,
+            currentResource.teamLoyalty + resourceEffect.teamLoyalty,
+            currentResource.vodka + resourceEffect.vodka,
+            currentResource.maxim + resourceEffect.maxim,
+            currentResource.capital + resourceEffect.capital,
+            currentResource.necronomicon + resourceEffect.necronomicon,
+            currentResource.neisvestno + resourceEffect.neisvestno,
+            currentResource.relationship + resourceEffect.relationship
+        )
+    }
+
+    override fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
+        dialogue.text = nextFragment
+    }
+
     override fun getDialogueByIndex(index: Int): Dialogue? {
-        val dialogue = getDialoguesWithOptions().find { it.first == index }?.second
+        val dialogue = dialogues.find { it.first == index }?.second
         dialogue?.let {
             if (index == 112 || index == 560) {
                 val nextFragment = getNextBookFragment()
                 updateDialogueWithNextFragment(it, nextFragment)
             }
-            val resourceEffect = it.options.firstOrNull()?.resourceEffect // Получаем эффект ресурсов из первой опции
+            val resourceEffect = it.options.firstOrNull()?.resourceEffect
             resourceEffect?.let { effect ->
-                updateResources(effect) // Применяем эффект ресурсов к текущим ресурсам
+                updateResources(effect)
             }
         }
         return dialogue
     }
 
-    fun updateResources(resourceEffect: Resource) {
-        resources.rubles += resourceEffect.rubles
-        resources.fame += resourceEffect.fame
-        resources.teamLoyalty += resourceEffect.teamLoyalty
-        resources.vodka += resourceEffect.vodka
-        resources.maxim += resourceEffect.maxim
-        resources.capital += resourceEffect.capital
-        resources.necronomicon += resourceEffect.necronomicon
-        resources.neisvestno += resourceEffect.neisvestno
-        resources.relationship += resourceEffect.relationship
-
-        println("Updated resources: $resources")
-        updateRelationship() // Обновление отношений
-    }
-
-    fun updateRelationship() {
-        val freshRelationship = getFrashRelationship()
-        println("Fresh relationship: $freshRelationship")
-        resources.relationship = freshRelationship
-    }
-
-    /** получаем текущую сцену*/
-    override fun getInitialScene(): Scene {
-        return scenes.first()
-    }
-
-    fun getNextBookFragment(): String {
-        currentBookPosition += 100 // Используем фиксированное значение для увеличения позиции чтения
-        val endIndex = currentBookPosition + 300 // Изменяем конечную позицию чтения
+    override fun getNextBookFragment(): String {
+        currentBookPosition += 100
+        val endIndex = currentBookPosition + 300
         lastReadFragment = if (currentBookPosition < bookText.length) {
             if (endIndex < bookText.length) {
                 bookText.substring(currentBookPosition, endIndex)
@@ -118,25 +100,10 @@ class GameRepositoryImpl(
                 bookText.substring(currentBookPosition)
             }
         } else {
-            "Конец книги"
+            "End of the book"
         }
-        return lastReadFragment // Возвращаем последний прочитанный фрагмент книги
+        return lastReadFragment
     }
-
-    // Функция для обновления текста диалога на основе последнего прочитанного фрагмента книги
-    fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
-        dialogue.text = nextFragment
-    }
-
-    fun getFrashRelationship(): Int {
-        return resources.relationship
-    }
-//    fun getFrashRelationship(): Int {
-//        val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-//        val currentRelationship = currentResource.relationship
-//        return currentRelationship
-//
-//    }
 
     /**
      * В этом коде реализована логика для управления сюжетом.
@@ -278,7 +245,7 @@ class GameRepositoryImpl(
                     text = "Такова твоя женская доля, милая",
                     nextDialogueIndex = 13,
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
-                    optionFunction = {resources.relationship+1}
+                    optionFunction = {currentResource.capital += 1}
                 ),
                 Option(
                     text = "Ты будешь радоваться моим успехом и праздновать вместе со мной победу!",
@@ -287,14 +254,14 @@ class GameRepositoryImpl(
                 Option(
                     text = "Клянусь тебе, душа моя, я ни дня не перестану думать о тебе в походе! И даже ночью ты будешь приходить ко мне во снах",
                     nextDialogueIndex = 13,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, +1),
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
+                    optionFunction = {currentResource.relationship += 1}
                 )
             ),
         ),
 
         13 to Dialogue(
-
-            text = when (resources.relationship) {
+            text = when (getResource().relationship) {
                 -1 -> "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
                 0 -> "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
                 1 -> "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
@@ -306,6 +273,8 @@ class GameRepositoryImpl(
                     text = "Думаю мне пора, возможно свидимся, Настенька...",
                     nextDialogueIndex = 14,
                     resourceEffect = Resource(5, 5, 5, 5, 5, 5, 5, 5, 5),
+                    optionFunction = {
+                    }
                 ),
                 Option(
                     text = "Я привезу тебе заморских сувениров, возможно красивое шёлковое кимоно",
@@ -319,12 +288,12 @@ class GameRepositoryImpl(
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 )
             ),
-            dialogFunction = {resources.relationship+1},
+            dialogFunction = {},
         ),
 
         14 to Dialogue(
-            dialogFunction = {resources.relationship+1},
-            text = when (resources.relationship) {
+            dialogFunction = {currentResource.relationship += 1},
+            text = when (currentResource.relationship) {
                 -2 -> "$anastasia::: Категорически согластна с тем, что тебе пора... "
                 -1 -> "$anastasia::: Думаю, тебе пора..."
                 0 -> "$anastasia::: ..."
@@ -334,7 +303,7 @@ class GameRepositoryImpl(
             },
             scene = scenes[10],
             options = listOf(
-                when (resources.relationship) {
+                when (currentResource.relationship) {
                     -2 -> Option(
                         text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
                         nextDialogueIndex = 18,
@@ -374,7 +343,7 @@ class GameRepositoryImpl(
         ),
 
         18 to Dialogue(
-            text = "Покидаю Петербург... ${resources.relationship} ... ${getFrashRelationship()}",
+            text = "Покидаю Петербург... ${currentResource} ... ${getResource().relationship}",
             scene = scenes[0],
             options = listOf(
                 Option(
@@ -757,28 +726,27 @@ class GameRepositoryImpl(
             options = listOf()
         ),
 
-        105 to Dialogue(
-            text = "Торговец открывает одну из полок его большого письменного стола ключом и достает толстую книгу, протягивая ее мне, так как я стоял ближе",
-            scene = scenes[6],
-            options = if (capital > 1) { // Проверяем значение
-                listOf(
-                    Option(
-                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу я читал, и интереса она не представляет",
-                        nextDialogueIndex = 110,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-                    ),
-                )
-            } else {
-                listOf(
-                    Option(
-                        text = "На незнакомой обложке красуется название: Капитал. Автор книги: Карл Маркс...",
-                        nextDialogueIndex = 106,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-//                        NotUsingThisCaseIfCapitalIsTrue = true // Устанавливаем значение, блокирующее этот вариант ответа для случая, если книга Капитал уже имеется
-                    )
-                )
-            },
-        ),
+//        105 to Dialogue(
+//            text = "Торговец открывает одну из полок его большого письменного стола ключом и достает толстую книгу, протягивая ее мне, так как я стоял ближе",
+//            scene = scenes[6],
+//            options = if (capital > 1) { // Проверяем значение
+//                listOf(
+//                    Option(
+//                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу я читал, и интереса она не представляет",
+//                        nextDialogueIndex = 110,
+//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+//                    ),
+//                )
+//            } else {
+//                listOf(
+//                    Option(
+//                        text = "На незнакомой обложке красуется название: Капитал. Автор книги: Карл Маркс...",
+//                        nextDialogueIndex = 106,
+//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+//                    )
+//                )
+//            },
+//        ),
 
 //        106 to Dialogue(
 //            text = "$bookseller::: Вы ведь русские, да? Скромные 149 Российских Царских рублей господа! Уверяю вас, вы не пожалеете!",
@@ -918,28 +886,28 @@ class GameRepositoryImpl(
             options = listOf()
         ),
 
-        206 to Dialogue(
-            text = "Ходебщик разворачивает перекидной мешок, и достает толстую книгу, протягивая ее мне",
-            scene = scenes[4],
-            options = if (capital > 1) { // Проверяем значение
-                listOf(
-                    Option(
-                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу читал, и она не представляет интереса",
-                        nextDialogueIndex = 209,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    ),
-                )
-            } else {
-                listOf(
-                    Option(
-                        text = "На незнакомой обложке красуется название: Что делать? Наболевшие вопросы нашего движения» — В. И. Ленин",
-                        nextDialogueIndex = 207,
-                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                        NotUsingThisCaseIfCapitalIsTrue = true // Устанавливаем значение, блокирующее этот вариант ответа для случая, если книга Капитал уже имеется
-                    )
-                )
-            },
-        ),
+//        206 to Dialogue(
+//            text = "Ходебщик разворачивает перекидной мешок, и достает толстую книгу, протягивая ее мне",
+//            scene = scenes[4],
+//            options = if (capital > 1) { // Проверяем значение
+//                listOf(
+//                    Option(
+//                        text = "Взглянув на обложку, разочарованно понимаю, что эту книгу читал, и она не представляет интереса",
+//                        nextDialogueIndex = 209,
+//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
+//                    ),
+//                )
+//            } else {
+//                listOf(
+//                    Option(
+//                        text = "На незнакомой обложке красуется название: Что делать? Наболевшие вопросы нашего движения» — В. И. Ленин",
+//                        nextDialogueIndex = 207,
+//                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0),
+////                        NotUsingThisCaseIfCapitalIsTrue = true // Устанавливаем значение, блокирующее этот вариант ответа для случая, если книга Капитал уже имеется
+//                    )
+//                )
+//            },
+//        ),
 
         207 to Dialogue(
             text = "Я открываю последниен страницы книги и в библиографических ссылках смотрю, нет ли знакомых источников. К своему удивлению нахожу книгу, которую начал недавно читать.",

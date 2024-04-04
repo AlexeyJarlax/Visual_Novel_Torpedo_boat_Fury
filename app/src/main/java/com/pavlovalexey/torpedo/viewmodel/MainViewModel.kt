@@ -27,29 +27,26 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
         _resources.value = resource // Используем переданный объект resource
     }
 
-    fun getResourceFromViewModel(): Resource {
-        return _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-    }
-
     fun selectOption(optionIndex: Int) {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
-        val selectedOption =
-            gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
+        val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
         selectedOption?.let { option ->
-            val nextDialogueIndex = option.nextDialogueIndex
+            val resourceEffect = option.resourceEffect ?: Resource(9, 9, 9, 9, 9, 9, 9, 9, 9) // Ресурс по умолчанию
+            gameRepository.updateResources(resourceEffect) // Обновляем ресурсы в репозитории с передачей объекта resourceEffect
             val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
             _resources.value = Resource(
-                currentResource.rubles + (option.resourceEffect?.rubles ?: 0),
-                currentResource.fame + (option.resourceEffect?.fame ?: 0),
-                currentResource.teamLoyalty + (option.resourceEffect?.teamLoyalty ?: 0),
-                currentResource.vodka + (option.resourceEffect?.vodka ?: 0),
-                currentResource.maxim + (option.resourceEffect?.maxim ?: 0),
-                currentResource.capital + (option.resourceEffect?.capital ?: 0),
-                currentResource.necronomicon + (option.resourceEffect?.necronomicon ?: 0),
-                currentResource.neisvestno + (option.resourceEffect?.neisvestno ?: 0),
-                currentResource.relationship + (option.resourceEffect?.relationship ?: 0)
+                currentResource.rubles + resourceEffect.rubles,
+                currentResource.fame + resourceEffect.fame,
+                currentResource.teamLoyalty + resourceEffect.teamLoyalty,
+                currentResource.vodka + resourceEffect.vodka,
+                currentResource.maxim + resourceEffect.maxim,
+                currentResource.capital + resourceEffect.capital,
+                currentResource.necronomicon + resourceEffect.necronomicon,
+                currentResource.neisvestno + resourceEffect.neisvestno,
+                currentResource.relationship + resourceEffect.relationship
             )
             // Получаем следующую сцену для диалога
+            val nextDialogueIndex = option.nextDialogueIndex
             val nextScene = gameRepository.getDialogueByIndex(nextDialogueIndex ?: 1)?.scene
             // Проверяем, отличается ли следующая сцена от текущей
             nextScene?.let {
