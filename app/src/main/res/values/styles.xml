@@ -198,6 +198,7 @@
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:gravity">center</item>
+        <item name="android:letterSpacing">0.0</item>
     </style>
 
     <style name="GoMenuButton" parent="Widget.MaterialComponents.Button">
@@ -212,6 +213,7 @@
         <item name="android:elevation">0dp</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:backgroundTint">@color/black</item>
+        <item name="android:letterSpacing">0.0</item>
     </style>
 
     <!-- Панель с ресурсами"-->

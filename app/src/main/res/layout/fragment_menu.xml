@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_menu"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#B3FFFFFF">
+
+    <View
+        android:layout_width="@dimen/dp24"
+        android:layout_height="@dimen/dp24"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp60"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/soundButton"
+            android:layout_weight="1"
+            style="@style/ErrorButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Звук"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/autoPlayButton"
+            style="@style/ErrorButtons"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Автоплей"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/closeSaveButton"
+            style="@style/ErrorButtons"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выход"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/resource_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/horizontal_gradient"
+        android:gravity="left"
+        android:padding="@dimen/dp6"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:text="@string/resource_text_view"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_marginBottom="@dimen/dp60"/>
+
+    </LinearLayout>
+
+</ScrollView>
