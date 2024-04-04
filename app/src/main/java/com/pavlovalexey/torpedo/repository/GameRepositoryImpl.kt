@@ -29,13 +29,7 @@ class GameRepositoryImpl(
     val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
     var currentBookPosition: Int = 300
-    private var _resources = MutableLiveData<Resource>()
-    val resources: LiveData<Resource>
-        get() = _resources
-
-    init {
-        _resources.value = resource // Используем переданный объект resource
-    }
+    val resources: Resource = resource
 
     /** определяем сцены по номерам. Каждый номер используется в определенном количестве диалогов, выбор происходит в методе ниже.*/
     private val scenes: List<Scene> = listOf(
@@ -89,21 +83,25 @@ class GameRepositoryImpl(
     }
 
     fun updateResources(resourceEffect: Resource) {
-        val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-        val updatedResource = Resource(
-            currentResource.rubles + resourceEffect.rubles,
-            currentResource.fame + resourceEffect.fame,
-            currentResource.teamLoyalty + resourceEffect.teamLoyalty,
-            currentResource.vodka + resourceEffect.vodka,
-            currentResource.maxim + resourceEffect.maxim,
-            currentResource.capital + resourceEffect.capital,
-            currentResource.necronomicon + resourceEffect.necronomicon,
-            currentResource.neisvestno + resourceEffect.neisvestno,
-            currentResource.relationship + resourceEffect.relationship
-        )
-        _resources.value = updatedResource // Установка обновленных ресурсов
+        resources.rubles += resourceEffect.rubles
+        resources.fame += resourceEffect.fame
+        resources.teamLoyalty += resourceEffect.teamLoyalty
+        resources.vodka += resourceEffect.vodka
+        resources.maxim += resourceEffect.maxim
+        resources.capital += resourceEffect.capital
+        resources.necronomicon += resourceEffect.necronomicon
+        resources.neisvestno += resourceEffect.neisvestno
+        resources.relationship += resourceEffect.relationship
+
+        println("Updated resources: $resources")
+        updateRelationship() // Обновление отношений
     }
 
+    fun updateRelationship() {
+        val freshRelationship = getFrashRelationship()
+        println("Fresh relationship: $freshRelationship")
+        resources.relationship = freshRelationship
+    }
 
     /** получаем текущую сцену*/
     override fun getInitialScene(): Scene {
@@ -131,11 +129,14 @@ class GameRepositoryImpl(
     }
 
     fun getFrashRelationship(): Int {
-        val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
-        val currentRelationship = currentResource.relationship
-        return currentRelationship
-
+        return resources.relationship
     }
+//    fun getFrashRelationship(): Int {
+//        val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+//        val currentRelationship = currentResource.relationship
+//        return currentRelationship
+//
+//    }
 
     /**
      * В этом коде реализована логика для управления сюжетом.
@@ -276,7 +277,8 @@ class GameRepositoryImpl(
                 Option(
                     text = "Такова твоя женская доля, милая",
                     nextDialogueIndex = 13,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
+                    optionFunction = {resources.relationship+1}
                 ),
                 Option(
                     text = "Ты будешь радоваться моим успехом и праздновать вместе со мной победу!",
@@ -292,7 +294,7 @@ class GameRepositoryImpl(
 
         13 to Dialogue(
 
-            text = when (getFrashRelationship()) {
+            text = when (resources.relationship) {
                 -1 -> "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?"
                 0 -> "$anastasia::: Надеюсь победа не будет стоить тебе жизни..."
                 1 -> "Благоверная покраснела, кажется её решимость переубедить меня колеблется"
@@ -317,11 +319,12 @@ class GameRepositoryImpl(
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 1),
                 )
             ),
+            dialogFunction = {resources.relationship+1},
         ),
 
         14 to Dialogue(
-//            dialogFunction = {relationship = resources.relationship},
-            text = when (getFrashRelationship()) {
+            dialogFunction = {resources.relationship+1},
+            text = when (resources.relationship) {
                 -2 -> "$anastasia::: Категорически согластна с тем, что тебе пора... "
                 -1 -> "$anastasia::: Думаю, тебе пора..."
                 0 -> "$anastasia::: ..."
@@ -331,7 +334,7 @@ class GameRepositoryImpl(
             },
             scene = scenes[10],
             options = listOf(
-                when (getFrashRelationship()) {
+                when (resources.relationship) {
                     -2 -> Option(
                         text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
                         nextDialogueIndex = 18,
@@ -371,19 +374,7 @@ class GameRepositoryImpl(
         ),
 
         18 to Dialogue(
-            text = "Покидаю Петербург... ${
-                _resources.value ?: Resource(
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ).relationship
-            } ... ${getFrashRelationship()}",
+            text = "Покидаю Петербург... ${resources.relationship} ... ${getFrashRelationship()}",
             scene = scenes[0],
             options = listOf(
                 Option(

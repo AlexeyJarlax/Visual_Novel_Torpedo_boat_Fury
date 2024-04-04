@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 val gameModule = module {
     // Определяем Resource как синглтон
-    single<Resource> { Resource(0, 0, 0, 0, 1, 0, 0, 0, 0) }
+    single<Resource> { Resource(0, 0, 0, 4, 4, 4, 0, 0, 0) }
 
     // Передаем ресурс из модуля зависимостей в конструктор GameRepositoryImpl
     single<GameRepository> { GameRepositoryImpl(get(), get()) }

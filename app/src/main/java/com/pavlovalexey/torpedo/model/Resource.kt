@@ -1,15 +1,15 @@
 package com.pavlovalexey.torpedo.model
 
 data class Resource(
-    val rubles: Int,
-    val fame: Int,
-    val teamLoyalty: Int,
-    val vodka: Int,
-    val maxim: Int,
-    val capital: Int, // книги по сценарию Революция
-    val necronomicon: Int, // книги по сценарию Некрономикон
-    val neisvestno: Int, // ресурс на будущее
-    val relationship: Int // отношение в диалоге
+    var rubles: Int,
+    var fame: Int,
+    var teamLoyalty: Int,
+    var vodka: Int,
+    var maxim: Int,
+    var capital: Int, // книги по сценарию Революция
+    var necronomicon: Int, // книги по сценарию Некрономикон
+    var neisvestno: Int, // ресурс на будущее
+    var relationship: Int // отношение в диалоге
 )
 
 
