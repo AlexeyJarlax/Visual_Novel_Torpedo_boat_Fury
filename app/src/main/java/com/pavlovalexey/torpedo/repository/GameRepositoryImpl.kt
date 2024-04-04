@@ -2,12 +2,11 @@ package com.pavlovalexey.torpedo.repository
 
 /** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
 
-import android.app.Activity
 import android.content.Context
 import android.media.MediaPlayer
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Characters.admiral
-import com.pavlovalexey.torpedo.model.Characters.anastasia
+import com.pavlovalexey.torpedo.model.Characters.daria
 import com.pavlovalexey.torpedo.model.Characters.bookseller
 import com.pavlovalexey.torpedo.model.Characters.paramonov
 import com.pavlovalexey.torpedo.model.Characters.reztsov
@@ -201,7 +200,7 @@ class GameRepositoryImpl(
         ),
 
         7 to Dialogue(
-            text = "$anastasia::: Почему на войну идешь именно ты?! Почему ни кто-то другой?!",
+            text = "$daria::: Почему на войну идешь именно ты?! Почему ни кто-то другой?!",
             scene = scenes[10],
             options = listOf()
         ),
@@ -218,7 +217,7 @@ class GameRepositoryImpl(
         ),
 
         10 to Dialogue(
-            text = "$anastasia::: И что же мне теперь, быть вдовой капитана и радоваться этому?",
+            text = "$daria::: И что же мне теперь, быть вдовой капитана и радоваться этому?",
             options = listOf(
                 Option(
                     text = "Такова твоя женская доля, милая",
@@ -237,10 +236,10 @@ class GameRepositoryImpl(
             ),
         ),
         11 to Dialogue(
-            text = "$anastasia::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?",
+            text = "$daria::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?",
             options = listOf(
                 Option(
-                    text = "Думаю мне пора, возможно свидимся, Настенька...",
+                    text = "Думаю мне пора, возможно свидимся, дорогая...",
                     nextDialogueIndex = 14,
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
                 ),
@@ -256,10 +255,10 @@ class GameRepositoryImpl(
             ),
         ),
         12 to Dialogue(
-            text = "$anastasia::: Надеюсь победа не будет стоить тебе жизни...",
+            text = "$daria::: Надеюсь победа не будет стоить тебе жизни...",
             options = listOf(
                 Option(
-                    text = "Думаю мне пора, возможно свидимся, Настенька...",
+                    text = "Думаю мне пора, возможно свидимся, дорогая...",
                     nextDialogueIndex = 15,
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
                 ),
@@ -278,7 +277,7 @@ class GameRepositoryImpl(
             text = "Благоверная покраснела...",
             options = listOf(
                 Option(
-                    text = "Думаю мне пора, возможно свидимся, Настенька...",
+                    text = "Думаю мне пора, возможно свидимся, дорогая...",
                     nextDialogueIndex = 16,
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, -1),
                 ),
@@ -298,7 +297,7 @@ class GameRepositoryImpl(
             scene = scenes[10],
             options = listOf(
                 Option(
-                    text = "С чувством глубокой горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
+                    text = "С чувством глубокой горечи покидаю дом Дарьи и направляюсь в кабак - утоплю эту горечь там в бокале и за игральным столом",
                     nextDialogueIndex = 19,
                     resourceEffect = Resource(-300, 0, 0, 0, 0, 0, 0, 0, 2)
                 )
@@ -309,7 +308,7 @@ class GameRepositoryImpl(
             scene = scenes[10],
             options = listOf(
                 Option(
-                    text = "С чувством горечи покидаю дом Насти и направляюсь в кабак - утоплю эту горечь там в бокале",
+                    text = "С чувством горечи покидаю дом Дарьи и направляюсь в кабак - утоплю эту горечь там в бокале",
                     nextDialogueIndex = 19,
                     resourceEffect = Resource(-100, 0, 0, 0, 0, 0, 0, 0, 1)
                 )
@@ -320,7 +319,7 @@ class GameRepositoryImpl(
             scene = scenes[10],
             options = listOf(
                 Option(
-                    text = "Со смешенными чувствами покидаю дом Насти и возвращаюсь домой",
+                    text = "Со смешенными чувствами покидаю дом Дарьи и возвращаюсь домой",
                     nextDialogueIndex = 19,
                     resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                 )
