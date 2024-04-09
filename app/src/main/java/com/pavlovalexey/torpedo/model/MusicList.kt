@@ -6,7 +6,7 @@ import com.pavlovalexey.torpedo.R
 
 object MusicList {
     val list: List<Music> = listOf(
-        Music(0, R.raw.music_yogitea_voyage)
+        Music(0, R.raw.chaikovsky_mix)
 //        Music(0, R.raw.music_odettes), //
 //        Music(1, R.raw.music_vokaliz), //
 //        Music(2, R.raw.music_natckrack) //
