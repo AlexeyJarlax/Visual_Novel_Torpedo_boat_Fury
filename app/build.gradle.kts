@@ -62,7 +62,7 @@ dependencies {
 // Конвертер для использования Gson с Retrofit
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 // Использование библиотеки OkHttp для работы с HTTP
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 // Использование Timber для логирования
     implementation("com.jakewharton.timber:timber:4.7.1")
 // Использование Kotlin Serialization для сериализации/десериализации данных JSON
