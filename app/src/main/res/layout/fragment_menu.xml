@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp60"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
@@ -25,7 +25,7 @@
             android:layout_weight="1"
             style="@style/ErrorButtons"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp60"
             android:text="Звук"/>
 
         <com.google.android.material.button.MaterialButton
@@ -33,15 +33,23 @@
             style="@style/ErrorButtons"
             android:layout_weight="1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp60"
             android:text="Автоплей"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settingsButton"
+            style="@style/ErrorButtons"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp60"
+            android:text="Настройки"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/closeSaveButton"
             style="@style/ErrorButtons"
             android:layout_weight="1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp60"
             android:text="Выход"/>
     </LinearLayout>
 
@@ -51,6 +59,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/horizontal_gradient"
         android:gravity="left"
+        android:layout_marginTop="@dimen/dp6"
         android:padding="@dimen/dp6"
         android:shadowColor="#000000"
         android:shadowDx="2"

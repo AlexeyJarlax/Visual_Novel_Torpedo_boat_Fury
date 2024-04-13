@@ -190,7 +190,7 @@
     <style name="ErrorButtons" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/yp_white_and_yp_black</item>
         <item name="android:textSize">@dimen/text_size_sp16</item>
-        <item name="cornerRadius">@dimen/dp24</item>
+        <item name="cornerRadius">@dimen/dp60</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:backgroundTint">@color/yp_black_and_yp_white</item>
