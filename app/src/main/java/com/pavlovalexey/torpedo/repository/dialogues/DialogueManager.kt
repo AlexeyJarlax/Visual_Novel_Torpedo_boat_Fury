@@ -4,6 +4,8 @@ import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Scenes
 
+val scenes: List<Scene> = Scenes.list
+
 object DialogueManager {
 
     val scenes: List<Scene> = Scenes.list
@@ -19,7 +21,17 @@ object DialogueManager {
             val fileDialogues = when (filename) {
                 "Dialogue00.kt" -> Dialogue00.dialogues
                 "Dialogue01.kt" -> Dialogue01.dialogues
-                // добавьте остальные файлы
+                "Dialogue02.kt" -> Dialogue02.dialogues
+                "Dialogue03.kt" -> Dialogue03.dialogues
+                "Dialogue04.kt" -> Dialogue04.dialogues
+                "Dialogue05.kt" -> Dialogue05.dialogues
+                "Dialogue06.kt" -> Dialogue06.dialogues
+                "Dialogue07.kt" -> Dialogue07.dialogues
+                "Dialogue08.kt" -> Dialogue08.dialogues
+//                "Dialogue09.kt" -> Dialogue09.dialogues
+//                "Dialogue10.kt" -> Dialogue10.dialogues
+//                "Dialogue11.kt" -> Dialogue11.dialogues
+//                "Dialogue12.kt" -> Dialogue12.dialogues
                 else -> emptyList()
             }
             dialogues.addAll(fileDialogues)

@@ -20,7 +20,7 @@ import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Scenes
 
-val scenes: List<Scene> = Scenes.list
+
 
 /** ГЛАВА 0 ПРОЛОГ*/
 
