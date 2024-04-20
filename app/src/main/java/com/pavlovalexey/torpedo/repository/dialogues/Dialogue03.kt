@@ -6,15 +6,20 @@ import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 
-//        /** ГЛАВА 3 НЕОБЫЧНАЯ КНИГА: КАПИТАЛ*/
-
-private var currentResource: Resource = TODO()
+/** ГЛАВА 3 НЕОБЫЧНАЯ КНИГА: КАПИТАЛ*/
 
 object Dialogue03 {
 
+    private var currentResource: Resource =
+        Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)// Define currentResource
+
+    internal fun setCurrentResource(resource: Resource) {
+        currentResource = resource
+    }
+
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
         100 to Dialogue(
-            text = "Решив прогуляться по городу я зашёл на местный рынок и через некоторое время, сам того не заметив уже изучал книги в большой книжной лавке",
+            text = " ${currentResource.rubles} Решив прогуляться по городу я зашёл на местный рынок и через некоторое время, сам того не заметив уже изучал книги в большой книжной лавке",
             scene = scenes[4],
             options = listOf()
         ),
@@ -98,13 +103,24 @@ object Dialogue03 {
         111 to Dialogue(
             text = "Конец дня, я могу уединиться в своей каюте и полистать одну из книг коллекции",
             scene = scenes[8],
-            options = listOf(
-                Option(
-                    text = "(чтение книг происходит автоматически в конце главы, оно не влияет на сюжет и может быть пропущено)",
-                    nextDialogueIndex = 112,
-                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+            options = if (currentResource.capital > 0) {
+                listOf(
+                    Option(
+                        text = "(чтение книг происходит автоматически в конце главы, оно не влияет на сюжет и может быть пропущено)",
+                        nextDialogueIndex = 112,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                    )
                 )
-            )
+            } else {
+                listOf(
+                    Option(
+                        text = "(на полке не оказалось непрочитанных книг...)",
+                        nextDialogueIndex = 113,
+                        resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+                    )
+                )
+            }
+
         ),
 
         112 to Dialogue(
@@ -123,5 +139,5 @@ object Dialogue03 {
                 )
             )
         ),
-        )
+    )
 }

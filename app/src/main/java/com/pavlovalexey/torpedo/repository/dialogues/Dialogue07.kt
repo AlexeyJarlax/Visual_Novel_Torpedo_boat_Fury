@@ -1,11 +1,20 @@
 package com.pavlovalexey.torpedo.repository.dialogues
 
+import com.pavlovalexey.torpedo.model.Characters.bookseller
+import com.pavlovalexey.torpedo.model.Characters.reztsov
 import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
+import com.pavlovalexey.torpedo.model.Resource
 
 /** ГЛАВА 7 НЕОБЫЧНАЯ КНИГА ПРОДОЛЖЕНИЕ */
 
 object Dialogue07 {
+
+    private var currentResource: Resource = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+    internal fun setCurrentResource(resource: Resource) {
+        currentResource = resource
+    }
 
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
 

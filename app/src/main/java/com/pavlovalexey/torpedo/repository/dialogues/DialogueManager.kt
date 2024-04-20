@@ -16,7 +16,21 @@ object DialogueManager {
         dialogues.clear() // Очищаем текущие диалоги перед загрузкой новых
 
         // В зависимости от индекса файла загружаем соответствующие диалоги
-        val filenames = listOf("Dialogue00.kt", "Dialogue01.kt", /* добавьте остальные файлы */)
+        val filenames = listOf(
+            "Dialogue00.kt",
+            "Dialogue01.kt",
+            "Dialogue02.kt",
+            "Dialogue03.kt",
+            "Dialogue04.kt",
+            "Dialogue05.kt",
+            "Dialogue06.kt",
+            "Dialogue07.kt",
+            "Dialogue08.kt",
+//            "Dialogue09.kt",
+//            "Dialogue10.kt",
+//            "Dialogue11.kt",
+//            "Dialogue12.kt"
+        )
         for (filename in filenames) {
             val fileDialogues = when (filename) {
                 "Dialogue00.kt" -> Dialogue00.dialogues

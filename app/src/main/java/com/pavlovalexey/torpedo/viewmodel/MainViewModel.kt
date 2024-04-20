@@ -7,6 +7,9 @@ import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.repository.GameRepository
+import com.pavlovalexey.torpedo.repository.dialogues.Dialogue01
+import com.pavlovalexey.torpedo.repository.dialogues.Dialogue03
+import com.pavlovalexey.torpedo.repository.dialogues.Dialogue07
 
 /** Стандартная вью модель с пробросом функций на RepositoryImpl через интерфейс. Схема активити - сингл + фрагменты Основные рвсчеты в GameRepositoryImpl*/
 
@@ -26,7 +29,11 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
 
     init {
         _currentScene.value = gameRepository.getInitialScene()
-        _resources.value = resource // Используем переданный объект resource
+        _resources.value = resource // Using the passed resource
+
+        Dialogue01.setCurrentResource(resource) // Set the current resource for Dialogue03
+        Dialogue03.setCurrentResource(resource) // Set the current resource for Dialogue03
+        Dialogue07.setCurrentResource(resource) // Set the current resource for Dialogue03
     }
 
     fun selectOption(optionIndex: Int) {
