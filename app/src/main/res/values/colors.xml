@@ -9,6 +9,8 @@
     <color name="yp_black">#1A1B22</color>
     <color name="black">#FF000000</color>
     <color name="aquamarine">#CAFBF7</color>
+    <color name="red">#BC0B0B</color>
+    <color name="green">#208124</color>
 
     <!-- ЦВЕТОВЫЕ ПАРЫ ДЛЯ ТЕМ И СТИЛЕЙ (день)-->
     <!-- цвет фона главного меню -->

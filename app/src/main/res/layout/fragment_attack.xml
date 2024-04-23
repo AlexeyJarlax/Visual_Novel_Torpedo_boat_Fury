@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/attackLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/attackContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/attackImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cgakffdspb02"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:background="@drawable/horizontal_gradient"
+        android:gravity="center"
+        android:padding="@dimen/dp6"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:text="Доступные карты:"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/upperRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lowerRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/powerTextView"
+        android:layout_marginTop="@dimen/dp12" />
+
+    <TextView
+        android:id="@+id/powerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_marginTop="@dimen/dp6"
+        android:layout_marginBottom="@dimen/dp16"
+        android:layout_weight="1"
+        android:background="@drawable/horizontal_gradient"
+        android:gravity="center"
+        android:padding="@dimen/dp6"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:text="Соотношение сил"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp100"
+        android:layout_above="@+id/linearLayout"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/attack_text_view_left"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp44"
+            android:layout_marginBottom="@dimen/dp60"
+            android:layout_weight="1"
+            android:background="@drawable/horizontal_gradient"
+            android:gravity="center"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:text="@string/leftvalue"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp44"
+            android:layout_weight="3"
+            android:max="100"
+            android:progressDrawable="@drawable/custom_progress_bar"
+            android:indeterminate="false" />
+
+        <TextView
+            android:id="@+id/attack_text_view_right"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp44"
+            android:layout_marginBottom="@dimen/dp60"
+            android:layout_weight="1"
+            android:background="@drawable/horizontal_gradient"
+            android:gravity="center"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:text="@string/rightvalue"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp16"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/attackPlayButton"
+            style="@style/ErrorButtons"
+            android:backgroundTint="#B11818"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp60"
+            android:layout_weight="0.8"
+            android:text="@string/fight" />
+
+        <View
+            android:layout_width="@dimen/dp16"
+            android:layout_height="@dimen/dp16"
+            android:layout_weight="0.2" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/attackCloseButton"
+            style="@style/ErrorButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp60"
+            android:layout_weight="0.8"
+            android:text="@string/escape" />
+    </LinearLayout>
+</RelativeLayout>

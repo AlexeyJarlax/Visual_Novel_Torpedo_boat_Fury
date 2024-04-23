@@ -91,7 +91,7 @@
 
     <!-- Стиль строки ввода поиска-->
     <style name="SearchButtons" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:background">@drawable/util_rounded_corners_8dp_light_gray</item>
+        <item name="android:background">@drawable/card_background</item>
         <item name="android:textSize">@dimen/text_size_sp16</item>
         <item name="android:textColor">@color/yp_black_and_yp_black</item>
         <item name="android:textColorHint">@color/yp_text_gray_and_yp_black</item>

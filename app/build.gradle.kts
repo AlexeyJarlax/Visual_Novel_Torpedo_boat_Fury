@@ -12,8 +12,8 @@ android {
         applicationId = "com.pavlovalexey.torpedo"
         minSdk = 29
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.03"
+        versionCode = 4
+        versionName = "0.04"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +43,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 // Использование библиотеки ConstraintLayout для создания гибких макетов
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 // Использование JUnit для юнит-тестирования кода
     testImplementation("junit:junit:4.13.2")
 // Подключение расширений JUnit для тестирования на устройствах Android
@@ -62,7 +64,7 @@ dependencies {
 // Конвертер для использования Gson с Retrofit
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 // Использование библиотеки OkHttp для работы с HTTP
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 // Использование Timber для логирования
     implementation("com.jakewharton.timber:timber:4.7.1")
 // Использование Kotlin Serialization для сериализации/десериализации данных JSON
