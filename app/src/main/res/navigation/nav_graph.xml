@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dialogueFragment">
+
+    <fragment
+        android:id="@+id/dialogueFragment"
+        android:name="com.pavlovalexey.torpedo.presentation.fragment.MainFragment"
+        android:label="fragment_dialogue"
+        tools:layout="@layout/fragment_dialogue" >
+        <action
+            android:id="@+id/action_dialogueFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_dialogueFragment_to_attackFragment"
+            app:destination="@id/attackFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.pavlovalexey.torpedo.presentation.fragment.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menuFragment_to_dialogueFragment"
+            app:destination="@id/dialogueFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/attackFragment"
+        android:name="com.pavlovalexey.torpedo.presentation.fragment.AttackFragment"
+        android:label="fragment_attack"
+        tools:layout="@layout/fragment_attack" >
+        <action
+            android:id="@+id/action_attackFragment_to_dialogueFragment"
+            app:destination="@id/dialogueFragment" />
+    </fragment>
+</navigation>

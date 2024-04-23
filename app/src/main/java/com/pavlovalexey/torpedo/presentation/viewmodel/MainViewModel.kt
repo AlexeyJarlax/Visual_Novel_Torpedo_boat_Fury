@@ -1,4 +1,4 @@
-package com.pavlovalexey.torpedo.viewmodel
+package com.pavlovalexey.torpedo.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,6 +7,9 @@ import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.repository.GameRepository
+import com.pavlovalexey.torpedo.repository.dialogues.Dialogue01
+import com.pavlovalexey.torpedo.repository.dialogues.Dialogue03
+import com.pavlovalexey.torpedo.repository.dialogues.Dialogue07
 
 /** Стандартная вью модель с пробросом функций на RepositoryImpl через интерфейс. Схема активити - сингл + фрагменты Основные рвсчеты в GameRepositoryImpl*/
 
@@ -20,18 +23,27 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
     val currentScene: LiveData<Scene>
         get() = _currentScene
 
-    private val _resources = MutableLiveData<Resource>() // Удаляем инициализацию, так как передаем объект через конструктор
+    private val _resources = MutableLiveData<Resource>()
     val resources: LiveData<Resource>
         get() = _resources
 
     init {
         _currentScene.value = gameRepository.getInitialScene()
-        _resources.value = resource // Используем переданный объект resource
+        _resources.value = resource // Using the passed resource
+
+        Dialogue01.setCurrentResource(resource)
+        Dialogue03.setCurrentResource(resource)
+        Dialogue07.setCurrentResource(resource)
     }
 
     fun selectOption(optionIndex: Int) {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
+
+        if (currentDialogueIndex == 0) {
+            resetResources()
+        }
+
         selectedOption?.let { option ->
             val resourceEffect = option.resourceEffect ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Ресурс по умолчанию
 
@@ -62,12 +74,13 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
         }
     }
 
+    private fun resetResources() {
+        _resources.value = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Устанавливаем все ресурсы в ноль
+    }
     fun goToNextDialogue() {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         _currentDialogueIndex.value = currentDialogueIndex + 1
-        // Получаем следующую сцену для диалога
         val nextScene = gameRepository.getDialogueByIndex(currentDialogueIndex + 1)?.scene
-        // Проверяем, отличается ли следующая сцена от текущей
         nextScene?.let {
             if (it != _currentScene.value) {
                 _currentScene.value = it

@@ -6,6 +6,7 @@ internal object Characters {
 
     val next = "Следующая глава"
     val end = "Конец игры"
+    val attack = "Атаковать цель!"
 
     val daria = "Дарья"
     val novikov = "Новиков"
