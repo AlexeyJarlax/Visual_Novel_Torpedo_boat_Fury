@@ -145,4 +145,6 @@
     </string>
         <string name="currency_format">%s %d</string>
         <string name="symbol_format">%s %d</string>
+    <string name="rightvalue">1</string>
+        <string name="leftvalue">100</string>
 </resources>

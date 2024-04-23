@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/attackLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/attackContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/attackImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cgakffdspb02"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp100"
+        android:layout_above="@+id/linearLayout"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/attack_text_view_left"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp6"
+            android:layout_marginBottom="@dimen/dp60"
+            android:layout_weight="1"
+            android:background="@drawable/horizontal_gradient"
+            android:gravity="center"
+            android:padding="@dimen/dp6"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:text="@string/leftvalue"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="91dp"
+            android:layout_height="44dp"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/attack_text_view_right"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp6"
+            android:layout_marginBottom="@dimen/dp60"
+            android:layout_weight="1"
+            android:background="@drawable/horizontal_gradient"
+            android:gravity="center"
+            android:padding="@dimen/dp6"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:text="@string/rightvalue"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp16"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/attackPlayButton"
+            style="@style/ErrorButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp60"
+            android:layout_weight="1"
+            android:text="Автоплей" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/attackCloseButton"
+            style="@style/ErrorButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp60"
+            android:layout_weight="1"
+            android:text="Выход" />
+    </LinearLayout>
+</RelativeLayout>

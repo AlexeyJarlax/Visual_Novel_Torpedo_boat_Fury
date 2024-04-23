@@ -52,7 +52,7 @@ class MenuFragment : Fragment() {
 
         menuLayout.setOnClickListener {
             (activity as MainActivity).showOptionsLayout()
-            parentFragmentManager.beginTransaction().remove(this).commit()
+            parentFragmentManager.beginTransaction().remove(this@MenuFragment).commit()
         }
 
         return view

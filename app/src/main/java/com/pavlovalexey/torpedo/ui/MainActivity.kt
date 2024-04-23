@@ -63,6 +63,7 @@ import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.fragment.app.commit
+import com.pavlovalexey.torpedo.model.Characters
 
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
@@ -124,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     private fun openResourceFragment() {
         // Открываем ResourceFragment при клике на resourcesLayout или resourcesLayout2
         supportFragmentManager.commit {
-            replace(R.id.fragment_container, MenuFragment())
+            replace(R.id.settings_frag_container, MenuFragment())
             addToBackStack(null) // Добавляем фрагмент в стек возврата
         }
     }
@@ -286,6 +287,20 @@ class MainActivity : AppCompatActivity() {
                 optionButtonView.text = option.text
                 optionButtonView.setOnClickListener {
                     mainViewModel.selectOption(index)
+
+                        when (option.text) {
+                            Characters.attack -> {
+                                // Открываем новый фрагмент для атаки
+                                supportFragmentManager.commit {
+                                    replace(R.id.settings_frag_container, AttackFragment())
+                                    addToBackStack(null)
+                                }
+                            }
+                            else -> {
+
+                            }
+                        }
+
                 }
                 optionsLayout.addView(optionButtonView)
             }
