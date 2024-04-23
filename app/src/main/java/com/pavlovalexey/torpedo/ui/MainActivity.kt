@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var capitalTextView: TextView
     private lateinit var necronomiconTextView: TextView
     private lateinit var relationshipTextView: TextView
+//    private lateinit var sceneImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,18 +100,24 @@ class MainActivity : AppCompatActivity() {
         capitalTextView = findViewById(R.id.capitalTextView)
         necronomiconTextView = findViewById(R.id.necronomiconTextView)
         relationshipTextView = findViewById(R.id.relationshipTextView)
+//        sceneContainer = findViewById(R.id.sceneContainer)
+
         findViewById<View>(R.id.resourcesLayout).setOnClickListener {
             openResourceFragment()
         }
         findViewById<View>(R.id.resourcesLayout2).setOnClickListener {
             openResourceFragment()
         }
-        findViewById<View>(android.R.id.content).setOnClickListener {
-            if (optionsLayout.childCount == 0) { // условие - если кнопок нет то клик по всей вьюхе переключает на следующий диалог
+        sceneImageView.setOnClickListener {
+            val menuFragment = supportFragmentManager.findFragmentByTag("MenuFragment")
+            val attackFragment = supportFragmentManager.findFragmentByTag("AttackFragment")
+
+            if (optionsLayout.childCount == 0 && menuFragment == null && attackFragment == null) {
                 mainViewModel.goToNextDialogue()
             }
         }
     }
+
 
     private fun subscribeToViewModel() {
         mainViewModel.currentScene.observe(this, Observer { scene ->
@@ -187,22 +194,16 @@ class MainActivity : AppCompatActivity() {
                 append(highlightedText)
                 setSpan(
                     StyleSpan(Typeface.ITALIC), // Установка стиля курсива
-                    0,
-                    highlightedText.length,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    0, highlightedText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 
                 // Выбор светло оранжевого цвета для текста после разделителя
                 setSpan(
                     ForegroundColorSpan(
                         ContextCompat.getColor(
-                            this@MainActivity,
-                            R.color.aquamarine
+                            this@MainActivity, R.color.aquamarine
                         )
-                    ),
-                    0,
-                    highlightedText.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    ), 0, highlightedText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 append(remainingText)
             }
@@ -217,8 +218,7 @@ class MainActivity : AppCompatActivity() {
         resources?.let {
             if (it.rubles != 0) {
                 animateTextChange(
-                    rublesTextView,
-                    getString(R.string.currency_format, "₽", it.rubles)
+                    rublesTextView, getString(R.string.currency_format, "₽", it.rubles)
                 )
             } else {
                 rublesTextView.text = ""
@@ -232,8 +232,7 @@ class MainActivity : AppCompatActivity() {
 
             if (it.teamLoyalty != 0) {
                 animateTextChange(
-                    teamLoyaltyTextView,
-                    getString(R.string.symbol_format, "🚩", it.teamLoyalty)
+                    teamLoyaltyTextView, getString(R.string.symbol_format, "🚩", it.teamLoyalty)
                 )
             } else {
                 teamLoyaltyTextView.text = ""
@@ -253,8 +252,7 @@ class MainActivity : AppCompatActivity() {
 
             if (it.capital != 0) {
                 animateTextChange(
-                    capitalTextView,
-                    getString(R.string.symbol_format, "☭", it.capital)
+                    capitalTextView, getString(R.string.symbol_format, "☭", it.capital)
                 )
             } else {
                 capitalTextView.text = ""
@@ -262,8 +260,7 @@ class MainActivity : AppCompatActivity() {
 
             if (it.necronomicon != 0) {
                 animateTextChange(
-                    necronomiconTextView,
-                    getString(R.string.symbol_format, "🐙", it.necronomicon)
+                    necronomiconTextView, getString(R.string.symbol_format, "🐙", it.necronomicon)
                 )
             } else {
                 necronomiconTextView.text = ""
@@ -288,18 +285,19 @@ class MainActivity : AppCompatActivity() {
                 optionButtonView.setOnClickListener {
                     mainViewModel.selectOption(index)
 
-                        when (option.text) {
-                            Characters.attack -> {
-                                // Открываем новый фрагмент для атаки
-                                supportFragmentManager.commit {
-                                    replace(R.id.settings_frag_container, AttackFragment())
-                                    addToBackStack(null)
-                                }
-                            }
-                            else -> {
-
+                    when (option.text) {
+                        Characters.attack -> {
+                            // Открываем новый фрагмент для атаки
+                            supportFragmentManager.commit {
+                                replace(R.id.settings_frag_container, AttackFragment())
+                                addToBackStack(null)
                             }
                         }
+
+                        else -> {
+
+                        }
+                    }
 
                 }
                 optionsLayout.addView(optionButtonView)

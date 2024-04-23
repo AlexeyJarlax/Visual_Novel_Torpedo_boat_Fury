@@ -7,11 +7,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.pavlovalexey.torpedo.R
+import com.pavlovalexey.torpedo.viewmodel.MenuViewModel
 
 /** фрагмент для верхнего меню игры. Содержит справку по ресурсам и события, кнопки*/
 
 class MenuFragment : Fragment() {
+
+    private val viewModel: MenuViewModel by viewModels()
 
     private fun toast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

@@ -8,9 +8,13 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.pavlovalexey.torpedo.R
+import com.pavlovalexey.torpedo.viewmodel.AttackViewModel
 
 class AttackFragment : Fragment() {
+
+    private val viewModel: AttackViewModel by viewModels()
 
     private lateinit var progressBar: ProgressBar
     private lateinit var leftValueTextView: TextView
