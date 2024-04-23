@@ -43,6 +43,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 // Использование библиотеки ConstraintLayout для создания гибких макетов
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 // Использование JUnit для юнит-тестирования кода
     testImplementation("junit:junit:4.13.2")
 // Подключение расширений JUnit для тестирования на устройствах Android

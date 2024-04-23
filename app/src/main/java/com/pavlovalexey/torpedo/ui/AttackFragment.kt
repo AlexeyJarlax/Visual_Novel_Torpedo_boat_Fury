@@ -30,7 +30,7 @@ class AttackFragment : Fragment() {
         rightValueTextView = view.findViewById(R.id.attack_text_view_right)
 
         val leftValue = 100
-        val rightValue = 1
+        val rightValue = 10
 
         leftValueTextView.text = leftValue.toString()
         rightValueTextView.text = rightValue.toString()
@@ -51,10 +51,9 @@ class AttackFragment : Fragment() {
 
         val attackCloseButton = view.findViewById<Button>(R.id.attackCloseButton)
         attackCloseButton.setOnClickListener {
-            // Закрываем фрагмент при нажатии на кнопку "Выход"
-            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+            val fragmentManager = parentFragmentManager
+            fragmentManager.popBackStack()
         }
-
         return view
     }
 }
