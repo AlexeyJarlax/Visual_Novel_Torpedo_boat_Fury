@@ -25,8 +25,8 @@ class AttackFragment : Fragment() {
     private lateinit var upperAdapter: AdapterUpper
     private lateinit var lowerAdapter: AdapterLower
 
-    private var leftValue: Int = 50
-    private var rightValue: Int = 50
+    private var leftValue: Int = 100
+    private var rightValue: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,9 +72,6 @@ class AttackFragment : Fragment() {
         lowerRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         lowerRecyclerView.adapter = lowerAdapter
 
-        leftValueTextView.text = leftValue.toString()
-        rightValueTextView.text = rightValue.toString()
-
         // Устанавливаем прогресс
         updateProgressBar()
 
@@ -89,6 +86,18 @@ class AttackFragment : Fragment() {
             toast("Функция ПОБЕГ в разработке...")
             toast("Сражайся, тряпка!")
         }
+
+        val powerTextView = view.findViewById<TextView>(R.id.powerTextView)
+        leftValueTextView.text = leftValue.toString()
+        if (rightValue == 0) {
+            progressBar.visibility = View.GONE
+            powerTextView.text = "соотношение сил неизвестно"
+            rightValueTextView.text = "???"
+        } else {
+            progressBar.visibility = View.VISIBLE
+            rightValueTextView.text = rightValue.toString()
+        }
+
         return view
     }
 

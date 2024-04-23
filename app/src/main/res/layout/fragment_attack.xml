@@ -44,11 +44,11 @@
         android:id="@+id/lowerRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView"
+        android:layout_above="@+id/powerTextView"
         android:layout_marginTop="@dimen/dp12" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/powerTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout2"
@@ -94,7 +94,9 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dp44"
             android:layout_weight="3"
-            android:progressDrawable="@drawable/custom_progress_bar" />
+            android:max="100"
+            android:progressDrawable="@drawable/custom_progress_bar"
+            android:indeterminate="false" />
 
         <TextView
             android:id="@+id/attack_text_view_right"

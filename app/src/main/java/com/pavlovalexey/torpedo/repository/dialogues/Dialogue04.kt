@@ -25,8 +25,9 @@ object Dialogue04 {
             text = "Виго, Испания",
             options = listOf(
                 Option(
-                    text = "...",
-                    nextDialogueIndex = 561,
+                    text = "Игра в разработке, продолжение следует...",
+                    nextDialogueIndex = 0,
+                    resourceEffect = Resource(0*0, 0*0, 0*0, 0*0, 0*0, 0*0, 0*0, 0*0, 0*0)
                 )
             )
         ),

@@ -33,7 +33,7 @@ object Dialogue00 {
             options = listOf(
                 Option(
                     text = "Начать новую игру",
-                    nextDialogueIndex = 62,
+                    nextDialogueIndex = 1,
                     resourceEffect = Resource(2000, 4, 0, 0, 0, 0, 0, 0, 0),
                 ),
             )

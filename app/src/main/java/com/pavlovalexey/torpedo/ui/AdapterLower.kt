@@ -9,7 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Card
 
-class AdapterLower(private var leftValue: Int, private val rightValue: Int, private val onItemClick: (Card, Int) -> Unit) :
+class AdapterLower(
+    private var leftValue: Int,
+    private val rightValue: Int,
+    private val onItemClick: (Card, Int) -> Unit
+) :
     RecyclerView.Adapter<AdapterLower.ViewHolder>() {
 
     private val cards = mutableListOf<Card>()
@@ -25,7 +29,7 @@ class AdapterLower(private var leftValue: Int, private val rightValue: Int, priv
                 if (position != RecyclerView.NO_POSITION) {
                     val item = cards[position]
                     onItemClick(item, position)
-                    leftValue += (leftValue * 0.1).toInt()
+                    leftValue -= (leftValue * 0.1).toInt()
                     // Обновляем прогресс только в AdapterUpper
                 }
             }

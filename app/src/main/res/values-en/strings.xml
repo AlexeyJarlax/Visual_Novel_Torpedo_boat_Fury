@@ -150,4 +150,5 @@
         <string name="leftvalue">0</string>
     <string name="escape">Побег...</string>
     <string name="fight">В БОЙ!</string>
+    <string name="unnown_power">Сила противника неизвестна</string>
 </resources>

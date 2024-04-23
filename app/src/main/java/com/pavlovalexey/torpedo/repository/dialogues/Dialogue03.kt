@@ -11,7 +11,7 @@ import com.pavlovalexey.torpedo.model.Resource
 object Dialogue03 {
 
     private var currentResource: Resource =
-        Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)// Define currentResource
+        Resource(0, 0, 0, 0, 0, 1, 0, 0, 0)// Define currentResource
 
     internal fun setCurrentResource(resource: Resource) {
         currentResource = resource
@@ -19,7 +19,7 @@ object Dialogue03 {
 
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
         100 to Dialogue(
-            text = " ${currentResource.rubles} Решив прогуляться по городу я зашёл на местный рынок и через некоторое время, сам того не заметив уже изучал книги в большой книжной лавке",
+            text = "Решив прогуляться по городу я зашёл на местный рынок и через некоторое время, сам того не заметив уже изучал книги в большой книжной лавке",
             scene = scenes[4],
             options = listOf()
         ),

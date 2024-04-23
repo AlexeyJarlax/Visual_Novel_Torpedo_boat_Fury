@@ -13,7 +13,7 @@ import com.pavlovalexey.torpedo.model.Resource
 object Dialogue01 {
 
     private var currentResource: Resource =
-        Resource(999, 0, 0, 0, 0, 0, 0, 0, 0)// Define currentResource
+        Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)// Define currentResource
 
     internal fun setCurrentResource(resource: Resource) {
         currentResource = resource
@@ -22,7 +22,7 @@ object Dialogue01 {
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
 
         19 to Dialogue(
-            text = "** ОТПЛЫТИЕ ** ${currentResource.rubles}",
+            text = "** ОТПЛЫТИЕ **",
             scene = scenes[2],
             options = listOf()
         ),
