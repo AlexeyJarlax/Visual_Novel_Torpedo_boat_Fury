@@ -23,7 +23,7 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
     val currentScene: LiveData<Scene>
         get() = _currentScene
 
-    private val _resources = MutableLiveData<Resource>() // Удаляем инициализацию, так как передаем объект через конструктор
+    private val _resources = MutableLiveData<Resource>()
     val resources: LiveData<Resource>
         get() = _resources
 
@@ -31,9 +31,9 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
         _currentScene.value = gameRepository.getInitialScene()
         _resources.value = resource // Using the passed resource
 
-        Dialogue01.setCurrentResource(resource) // Set the current resource for Dialogue03
-        Dialogue03.setCurrentResource(resource) // Set the current resource for Dialogue03
-        Dialogue07.setCurrentResource(resource) // Set the current resource for Dialogue03
+        Dialogue01.setCurrentResource(resource)
+        Dialogue03.setCurrentResource(resource)
+        Dialogue07.setCurrentResource(resource)
     }
 
     fun selectOption(optionIndex: Int) {
@@ -41,7 +41,6 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
         val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
 
         if (currentDialogueIndex == 0) {
-            // Если номер текущего диалога равен 0, сбрасываем все ресурсы в ноль
             resetResources()
         }
 
@@ -81,9 +80,7 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
     fun goToNextDialogue() {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         _currentDialogueIndex.value = currentDialogueIndex + 1
-        // Получаем следующую сцену для диалога
         val nextScene = gameRepository.getDialogueByIndex(currentDialogueIndex + 1)?.scene
-        // Проверяем, отличается ли следующая сцена от текущей
         nextScene?.let {
             if (it != _currentScene.value) {
                 _currentScene.value = it

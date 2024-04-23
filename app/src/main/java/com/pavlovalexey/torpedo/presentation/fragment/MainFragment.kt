@@ -77,7 +77,6 @@ class MainFragment : Fragment() {
             if (optionsLayout.childCount == 0 && childFragmentManager.findFragmentByTag("MenuFragment") == null && childFragmentManager.findFragmentByTag("AttackFragment") == null) {
                 mainViewModel.goToNextDialogue()
             } else {
-                // Действие при открытых фрагментах, если нужно
             }
         }
     }
@@ -96,7 +95,6 @@ class MainFragment : Fragment() {
         val currentDialogue =
             mainViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
 
-        // Разделение текста диалога на части до и после "::" и "--"
         val partsColon = currentDialogue.text?.split("::")
         val partsDash = currentDialogue.text?.split("--")
         val parts = if (partsColon != null && partsColon.size == 2) {
@@ -111,15 +109,12 @@ class MainFragment : Fragment() {
             val highlightedText = parts[0] // Текст, который нужно подчеркнуть
             val remainingText = parts[1] // Оставшаяся часть текста
 
-            // Формирование отформатированного текста с подчеркнутой и цветной частью
             SpannableStringBuilder().apply {
                 append(highlightedText)
                 setSpan(
                     StyleSpan(Typeface.ITALIC), // Установка стиля курсива
                     0, highlightedText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-
-                // Выбор светло оранжевого цвета для текста после разделителя
                 setSpan(
                     ForegroundColorSpan(
                         ContextCompat.getColor(
@@ -132,7 +127,6 @@ class MainFragment : Fragment() {
         } else {
             currentDialogue.text ?: ""
         }
-
         dialogueTextView.text = formattedText
 
         // Установка значений ресурсов
@@ -206,15 +200,11 @@ class MainFragment : Fragment() {
                 optionButtonView.text = option.text
                 optionButtonView.setOnClickListener {
                     mainViewModel.selectOption(index)
-
                     when (option.text) {
                         Characters.attack -> {
-                            // Открываем новый фрагмент для атаки
                             findNavController().navigate(R.id.action_dialogueFragment_to_attackFragment)
                         }
-
                         else -> {
-                            // Логика для других вариантов...
                         }
                     }
                 }
@@ -228,8 +218,7 @@ class MainFragment : Fragment() {
     private fun animateTextChange(textView: TextView, newText: String) {
         if (textView.text.toString() != newText) {
             val animator = ValueAnimator.ofFloat(1f, 2f)
-            animator.duration = 400 // длительность анимации увеличения
-
+            animator.duration = 400
             animator.addUpdateListener { animation ->
                 val animatedValue = animation.animatedValue as Float
                 textView.scaleX = animatedValue
@@ -240,8 +229,7 @@ class MainFragment : Fragment() {
             }
 
             val reverseAnimator = ValueAnimator.ofFloat(2f, 1f)
-            reverseAnimator.duration = 400 // длительность анимации уменьшения
-
+            reverseAnimator.duration = 400
             reverseAnimator.addUpdateListener { animation ->
                 val animatedValue = animation.animatedValue as Float
                 textView.scaleX = animatedValue

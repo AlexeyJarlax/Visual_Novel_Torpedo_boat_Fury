@@ -12,7 +12,6 @@ import com.pavlovalexey.torpedo.presentation.viewmodel.MenuViewModel
 
 /** фрагмент для верхнего меню игры. Содержит справку по ресурсам и события, кнопки*/
 
-
 import androidx.fragment.app.activityViewModels
 
 class MenuFragment : Fragment() {
@@ -34,7 +33,6 @@ class MenuFragment : Fragment() {
         val settingsButton = view.findViewById<Button>(R.id.settingsButton)
         val closeSaveButton = view.findViewById<Button>(R.id.closeSaveButton)
         val menuLayout = view.findViewById<View>(R.id.fragment_menu)
-//        (requireActivity() as MainActivity).hideOptionsLayout()
 
         soundButton.setOnClickListener {
             toast("Вы нажали кнопку 'Звук' Функция в разработке")

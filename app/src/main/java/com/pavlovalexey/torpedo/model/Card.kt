@@ -1,5 +1,7 @@
 package com.pavlovalexey.torpedo.model
 
+/** карты, используемые в бою, дают бонус к исходу боя */
+
 data class Card(
     val title: String,
     val emoji: String

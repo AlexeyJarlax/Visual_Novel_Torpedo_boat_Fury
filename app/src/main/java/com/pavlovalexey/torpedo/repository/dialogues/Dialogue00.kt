@@ -29,7 +29,7 @@ object Dialogue00 {
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
         0 to Dialogue(
             text = "Санкт-Петербург. 1905 г.",
-            scene = scenes[0], // Сцена 0 для диалога 0
+            scene = scenes[0],
             options = listOf(
                 Option(
                     text = "Начать новую игру",

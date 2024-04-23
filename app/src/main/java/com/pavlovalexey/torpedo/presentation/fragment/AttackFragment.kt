@@ -42,13 +42,9 @@ class AttackFragment : Fragment() {
         // Настройка верхнего RecyclerView
         upperRecyclerView = view.findViewById(R.id.upperRecyclerView)
         upperAdapter = AdapterUpper(leftValue, rightValue) { card, position ->
-            // Удаление карточки из верхнего адаптера по позиции
             upperAdapter.removeItem(position)
-            // Добавление карточки в нижний адаптер
             lowerAdapter.addItem(card)
-            // Обновляем значение leftValue
             leftValue += (leftValue * 0.1).toInt()
-            // Обновляем прогресс
             updateProgressBar()
         }
         upperRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
@@ -58,16 +54,12 @@ class AttackFragment : Fragment() {
         // Настройка нижнего RecyclerView
         val lowerRecyclerView = view.findViewById<RecyclerView>(R.id.lowerRecyclerView)
         lowerAdapter = AdapterLower(leftValue, rightValue) { card, position ->
-            // Проверяем, есть ли значения в карточке
             if (card.title.isNotEmpty() && card.emoji.isNotEmpty()) {
                 lowerAdapter.removeItem(position)
                 upperAdapter.addItem(card)
-                // Обновляем значение leftValue
                 leftValue += (leftValue * 0.1).toInt()
-                // Обновляем прогресс
                 updateProgressBar()
             } else {
-                // Иначе выводим сообщение об ошибке
                 toast("Карточка не содержит значений и не будет отображаться")
             }
         }
@@ -104,11 +96,8 @@ class AttackFragment : Fragment() {
     }
 
     private fun updateProgressBar() {
-        // Вычисляем разницу между значениями
         val difference = leftValue - rightValue
-        // Приводим разницу к диапазону прогресса (0-100)
         val progressValue = (difference.coerceIn(0, 100) * 100) / 100
-        // Устанавливаем прогресс
         progressBar.progress = progressValue
     }
 
