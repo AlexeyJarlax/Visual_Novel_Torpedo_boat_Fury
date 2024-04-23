@@ -1,4 +1,4 @@
-package com.pavlovalexey.torpedo.ui
+package com.pavlovalexey.torpedo.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

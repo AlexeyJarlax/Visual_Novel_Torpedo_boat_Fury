@@ -1,4 +1,4 @@
-package com.pavlovalexey.torpedo.ui
+package com.pavlovalexey.torpedo.presentation.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pavlovalexey.torpedo.R
-import com.pavlovalexey.torpedo.viewmodel.AttackViewModel
+import com.pavlovalexey.torpedo.presentation.adapter.AdapterLower
+import com.pavlovalexey.torpedo.presentation.adapter.AdapterUpper
+import com.pavlovalexey.torpedo.presentation.viewmodel.AttackViewModel
 
 class AttackFragment : Fragment() {
 

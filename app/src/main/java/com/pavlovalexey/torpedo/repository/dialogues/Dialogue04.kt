@@ -27,7 +27,7 @@ object Dialogue04 {
                 Option(
                     text = "Игра в разработке, продолжение следует...",
                     nextDialogueIndex = 0,
-                    resourceEffect = Resource(0*0, 0*0, 0*0, 0*0, 0*0, 0*0, 0*0, 0*0, 0*0)
+                    resourceEffect = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
                 )
             )
         ),

@@ -1,4 +1,4 @@
-package com.pavlovalexey.torpedo.ui
+package com.pavlovalexey.torpedo.presentation.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.pavlovalexey.torpedo.R
-import com.pavlovalexey.torpedo.viewmodel.MenuViewModel
+import com.pavlovalexey.torpedo.presentation.viewmodel.MenuViewModel
 
 /** фрагмент для верхнего меню игры. Содержит справку по ресурсам и события, кнопки*/
 

@@ -1,4 +1,4 @@
-package com.pavlovalexey.torpedo.ui
+package com.pavlovalexey.torpedo.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.View

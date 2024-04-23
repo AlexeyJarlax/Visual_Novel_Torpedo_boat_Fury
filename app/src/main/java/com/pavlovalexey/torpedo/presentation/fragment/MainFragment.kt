@@ -1,4 +1,4 @@
-package com.pavlovalexey.torpedo.ui
+package com.pavlovalexey.torpedo.presentation.fragment
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -23,10 +23,10 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Characters
-import com.pavlovalexey.torpedo.viewmodel.MainViewModel
+import com.pavlovalexey.torpedo.presentation.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class DialogueFragment : Fragment() {
+class MainFragment : Fragment() {
     private val mainViewModel: MainViewModel by sharedViewModel()
 
     private lateinit var dialogueTextView: TextView
@@ -222,6 +222,8 @@ class DialogueFragment : Fragment() {
             }
         }
     }
+
+
 
     private fun animateTextChange(textView: TextView, newText: String) {
         if (textView.text.toString() != newText) {

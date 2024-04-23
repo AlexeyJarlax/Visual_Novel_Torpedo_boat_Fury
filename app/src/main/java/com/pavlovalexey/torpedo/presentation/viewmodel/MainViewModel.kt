@@ -1,4 +1,4 @@
-package com.pavlovalexey.torpedo.viewmodel
+package com.pavlovalexey.torpedo.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -39,6 +39,12 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
     fun selectOption(optionIndex: Int) {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
+
+        if (currentDialogueIndex == 0) {
+            // Если номер текущего диалога равен 0, сбрасываем все ресурсы в ноль
+            resetResources()
+        }
+
         selectedOption?.let { option ->
             val resourceEffect = option.resourceEffect ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Ресурс по умолчанию
 
@@ -69,6 +75,9 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
         }
     }
 
+    private fun resetResources() {
+        _resources.value = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Устанавливаем все ресурсы в ноль
+    }
     fun goToNextDialogue() {
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         _currentDialogueIndex.value = currentDialogueIndex + 1

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dialogueFragment"
-        android:name="com.pavlovalexey.torpedo.ui.DialogueFragment"
+        android:name="com.pavlovalexey.torpedo.presentation.fragment.MainFragment"
         android:label="fragment_dialogue"
         tools:layout="@layout/fragment_dialogue" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
-        android:name="com.pavlovalexey.torpedo.ui.MenuFragment"
+        android:name="com.pavlovalexey.torpedo.presentation.fragment.MenuFragment"
         android:label="fragment_menu"
         tools:layout="@layout/fragment_menu" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/attackFragment"
-        android:name="com.pavlovalexey.torpedo.ui.AttackFragment"
+        android:name="com.pavlovalexey.torpedo.presentation.fragment.AttackFragment"
         android:label="fragment_attack"
         tools:layout="@layout/fragment_attack" >
         <action
