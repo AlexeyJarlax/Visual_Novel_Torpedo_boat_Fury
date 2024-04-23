@@ -17,21 +17,38 @@
             android:scaleType="centerCrop" />
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:background="@drawable/horizontal_gradient"
+        android:gravity="center"
+        android:padding="@dimen/dp6"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:text="Доступные карты:"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/upperRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+        android:layout_below="@+id/textView2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lowerRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout"
-        android:layout_below="@+id/upperRecyclerView"
+        android:layout_above="@+id/textView"
         android:layout_marginTop="@dimen/dp12" />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout2"

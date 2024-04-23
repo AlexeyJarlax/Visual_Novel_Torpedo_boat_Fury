@@ -8,9 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Card
 
-class YourAdapterLower(private val itemList: MutableList<Card>, private val onItemClick: (Card) -> Unit) : RecyclerView.Adapter<YourAdapterLower.YourViewHolder>() {
+class AdapterLower(private val onItemClick: (Card) -> Unit) : RecyclerView.Adapter<AdapterLower.ViewHolder>() {
 
-    class ViewHolder(itemView: View, private val onItemClick: (Card) -> Unit) :
+    companion object {
+        val cards = mutableListOf<Card>()
+    }
+
+    inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val emojiTextView: TextView = itemView.findViewById(R.id.emojiTextView)
@@ -19,7 +23,7 @@ class YourAdapterLower(private val itemList: MutableList<Card>, private val onIt
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val item = itemList[position]
+                    val item = AdapterUpper.cards[position] // Используем карточки из YourAdapterUpper
                     onItemClick(item)
                 }
             }
@@ -29,27 +33,24 @@ class YourAdapterLower(private val itemList: MutableList<Card>, private val onIt
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_card, parent, false)
-        return ViewHolder(view, onItemClick)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = itemList[position]
-        holder.titleTextView.text = currentItem.title
-        holder.emojiTextView.text = currentItem.emoji
+        // Теперь onBindViewHolder будет пустым, так как карточки будут отображаться в YourAdapterUpper
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return AdapterUpper.cards.size // Используем размер списка карточек из YourAdapterUpper
     }
 
     fun removeItem(position: Int) {
-        itemList.removeAt(position)
+        AdapterUpper.cards.removeAt(position)
         notifyItemRemoved(position)
     }
 
-    inner class YourViewHolder(itemView: View, private val onItemClick: (Card) -> Unit) :
-        RecyclerView.ViewHolder(itemView) {
-        // Остальной код ViewHolder
+    fun addItem(card: Card) {
+        AdapterUpper.cards.add(card)
+        notifyItemInserted(AdapterUpper.cards.size - 1)
     }
 }
-
