@@ -3,14 +3,16 @@ package com.pavlovalexey.torpedo.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Card
 
-class AdapterLower(private val onItemClick: (Card) -> Unit) : RecyclerView.Adapter<AdapterLower.ViewHolder>() {
+class AdapterLower(private var leftValue: Int, private val rightValue: Int, private val onItemClick: (Card, Int) -> Unit) :
+    RecyclerView.Adapter<AdapterLower.ViewHolder>() {
 
-    private val cards = mutableListOf<Card>() // Свой список карточек для нижнего адаптера
+    private val cards = mutableListOf<Card>()
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -22,7 +24,9 @@ class AdapterLower(private val onItemClick: (Card) -> Unit) : RecyclerView.Adapt
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val item = cards[position]
-                    onItemClick(item)
+                    onItemClick(item, position)
+                    leftValue += (leftValue * 0.1).toInt()
+                    // Обновляем прогресс только в AdapterUpper
                 }
             }
         }
