@@ -10,7 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.pavlovalexey.torpedo.R
+import com.pavlovalexey.torpedo.model.Card
+import com.pavlovalexey.torpedo.model.cards
 import com.pavlovalexey.torpedo.viewmodel.AttackViewModel
 import timber.log.Timber
 
@@ -22,6 +26,11 @@ class AttackFragment : Fragment() {
     private lateinit var leftValueTextView: TextView
     private lateinit var rightValueTextView: TextView
 
+    private lateinit var upperRecyclerView: RecyclerView
+    private lateinit var lowerRecyclerView: RecyclerView
+    private lateinit var upperAdapter: YourAdapterUpper
+    private lateinit var lowerAdapter: YourAdapterLower
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,6 +39,24 @@ class AttackFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
         leftValueTextView = view.findViewById(R.id.attack_text_view_left)
         rightValueTextView = view.findViewById(R.id.attack_text_view_right)
+
+        // Настройка верхнего RecyclerView
+        upperRecyclerView = view.findViewById(R.id.upperRecyclerView)
+        upperAdapter = YourAdapterUpper()
+        upperRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        upperRecyclerView.adapter = upperAdapter
+
+        // Настройка нижнего RecyclerView
+        lowerRecyclerView = view.findViewById(R.id.lowerRecyclerView)
+        lowerAdapter = YourAdapterLower(cards.toMutableList()) { card ->
+            // Удаление карточки из списка нижнего адаптера
+            lowerAdapter.removeItem(adapterPosition)
+
+            // Добавление карточки в верхний адаптер
+            upperAdapter.addItem(card)
+        }
+        lowerRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        lowerRecyclerView.adapter = lowerAdapter
 
         val leftValue = 50
         val rightValue = 50

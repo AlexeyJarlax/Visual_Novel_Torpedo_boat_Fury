@@ -17,6 +17,20 @@
             android:scaleType="centerCrop" />
     </FrameLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/upperRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lowerRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_below="@+id/upperRecyclerView"
+        android:layout_marginTop="@dimen/dp12" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
