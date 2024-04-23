@@ -11,11 +11,10 @@ import com.pavlovalexey.torpedo.model.Card
 class AdapterUpper(private val onItemClick: (Card, Int) -> Unit) :
     RecyclerView.Adapter<AdapterUpper.ViewHolder>() {
 
-    companion object {
-        val cards = mutableListOf<Card>()
-        init {
-            cards.addAll(com.pavlovalexey.torpedo.model.cards)
-        }
+    private val cards = mutableListOf<Card>() // Свой список карточек для верхнего адаптера
+
+    init {
+        cards.addAll(com.pavlovalexey.torpedo.model.cards)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -10,9 +10,7 @@ import com.pavlovalexey.torpedo.model.Card
 
 class AdapterLower(private val onItemClick: (Card) -> Unit) : RecyclerView.Adapter<AdapterLower.ViewHolder>() {
 
-    companion object {
-        val cards = mutableListOf<Card>()
-    }
+    private val cards = mutableListOf<Card>() // Свой список карточек для нижнего адаптера
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -23,7 +21,7 @@ class AdapterLower(private val onItemClick: (Card) -> Unit) : RecyclerView.Adapt
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val item = AdapterUpper.cards[position] // Используем карточки из YourAdapterUpper
+                    val item = cards[position]
                     onItemClick(item)
                 }
             }
@@ -37,20 +35,22 @@ class AdapterLower(private val onItemClick: (Card) -> Unit) : RecyclerView.Adapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // Теперь onBindViewHolder будет пустым, так как карточки будут отображаться в YourAdapterUpper
+        val currentItem = cards[position]
+        holder.titleTextView.text = currentItem.title
+        holder.emojiTextView.text = currentItem.emoji
     }
 
     override fun getItemCount(): Int {
-        return AdapterUpper.cards.size // Используем размер списка карточек из YourAdapterUpper
+        return cards.size
     }
 
     fun removeItem(position: Int) {
-        AdapterUpper.cards.removeAt(position)
+        cards.removeAt(position)
         notifyItemRemoved(position)
     }
 
     fun addItem(card: Card) {
-        AdapterUpper.cards.add(card)
-        notifyItemInserted(AdapterUpper.cards.size - 1)
+        cards.add(card)
+        notifyItemInserted(cards.size - 1)
     }
 }

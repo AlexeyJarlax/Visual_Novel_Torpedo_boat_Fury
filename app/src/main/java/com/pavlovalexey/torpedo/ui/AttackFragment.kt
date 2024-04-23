@@ -34,7 +34,7 @@ class AttackFragment : Fragment() {
         leftValueTextView = view.findViewById(R.id.attack_text_view_left)
         rightValueTextView = view.findViewById(R.id.attack_text_view_right)
 
-// Настройка верхнего RecyclerView
+        // Настройка верхнего RecyclerView
         upperRecyclerView = view.findViewById(R.id.upperRecyclerView)
         upperAdapter = AdapterUpper { card, position ->
             // Удаление карточки из верхнего адаптера по позиции
@@ -45,11 +45,17 @@ class AttackFragment : Fragment() {
         upperRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         upperRecyclerView.adapter = upperAdapter
 
-// Настройка нижнего RecyclerView
+        // Настройка нижнего RecyclerView
         val lowerRecyclerView = view.findViewById<RecyclerView>(R.id.lowerRecyclerView)
         lowerAdapter = AdapterLower { card ->
-            // Добавление карточки в верхний адаптер
-            upperAdapter.addItem(card)
+            // Проверяем, есть ли значения в карточке
+            if (card.title.isNotEmpty() && card.emoji.isNotEmpty()) {
+                // Если есть значения, добавляем карточку в верхний адаптер
+                upperAdapter.addItem(card)
+            } else {
+                // Иначе выводим сообщение об ошибке
+                toast("Карточка не содержит значений и не будет отображаться")
+            }
         }
         lowerRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         lowerRecyclerView.adapter = lowerAdapter
