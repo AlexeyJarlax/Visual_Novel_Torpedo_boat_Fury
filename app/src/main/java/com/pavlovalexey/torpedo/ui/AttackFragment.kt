@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.viewmodel.AttackViewModel
+import timber.log.Timber
 
 class AttackFragment : Fragment() {
 
@@ -29,8 +31,8 @@ class AttackFragment : Fragment() {
         leftValueTextView = view.findViewById(R.id.attack_text_view_left)
         rightValueTextView = view.findViewById(R.id.attack_text_view_right)
 
-        val leftValue = 100
-        val rightValue = 10
+        val leftValue = 50
+        val rightValue = 50
 
         leftValueTextView.text = leftValue.toString()
         rightValueTextView.text = rightValue.toString()
@@ -46,14 +48,19 @@ class AttackFragment : Fragment() {
 
         val attackPlayButton = view.findViewById<Button>(R.id.attackPlayButton)
         attackPlayButton.setOnClickListener {
-            // При нажатии на кнопку "Автоплей" можно добавить сюда логику, если нужно
+            val fragmentManager = parentFragmentManager
+            fragmentManager.popBackStack()
         }
 
         val attackCloseButton = view.findViewById<Button>(R.id.attackCloseButton)
         attackCloseButton.setOnClickListener {
-            val fragmentManager = parentFragmentManager
-            fragmentManager.popBackStack()
+            toast("Функция ПОБЕГ в разработке...")
+            toast("Сражайся, тряпка!")
         }
         return view
+    }
+
+    private fun toast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

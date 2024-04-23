@@ -17,7 +17,25 @@
             android:scaleType="centerCrop" />
     </FrameLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_marginTop="@dimen/dp6"
+        android:layout_marginBottom="@dimen/dp16"
+        android:layout_weight="1"
+        android:background="@drawable/horizontal_gradient"
+        android:gravity="center"
+        android:padding="@dimen/dp6"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:text="Соотношение сил"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp100"
         android:layout_above="@+id/linearLayout"
@@ -27,13 +45,11 @@
         <TextView
             android:id="@+id/attack_text_view_left"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp6"
+            android:layout_height="@dimen/dp44"
             android:layout_marginBottom="@dimen/dp60"
             android:layout_weight="1"
             android:background="@drawable/horizontal_gradient"
             android:gravity="center"
-            android:padding="@dimen/dp6"
             android:shadowColor="#000000"
             android:shadowDx="2"
             android:shadowDy="2"
@@ -44,20 +60,19 @@
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="91dp"
-            android:layout_height="44dp"
-            android:layout_weight="3" />
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp44"
+            android:layout_weight="3"
+            android:progressDrawable="@drawable/custom_progress_bar" />
 
         <TextView
             android:id="@+id/attack_text_view_right"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp6"
+            android:layout_height="@dimen/dp44"
             android:layout_marginBottom="@dimen/dp60"
             android:layout_weight="1"
             android:background="@drawable/horizontal_gradient"
             android:gravity="center"
-            android:padding="@dimen/dp6"
             android:shadowColor="#000000"
             android:shadowDx="2"
             android:shadowDy="2"
@@ -77,17 +92,23 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/attackPlayButton"
             style="@style/ErrorButtons"
+            android:backgroundTint="#B11818"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp60"
-            android:layout_weight="1"
-            android:text="Автоплей" />
+            android:layout_weight="0.8"
+            android:text="@string/fight" />
+
+        <View
+            android:layout_width="@dimen/dp16"
+            android:layout_height="@dimen/dp16"
+            android:layout_weight="0.2" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/attackCloseButton"
             style="@style/ErrorButtons"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp60"
-            android:layout_weight="1"
-            android:text="Выход" />
+            android:layout_weight="0.8"
+            android:text="@string/escape" />
     </LinearLayout>
 </RelativeLayout>

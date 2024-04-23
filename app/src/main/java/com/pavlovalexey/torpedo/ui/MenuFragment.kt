@@ -53,9 +53,6 @@ class MenuFragment : Fragment() {
         }
 
         menuLayout.setOnClickListener {
-//            (requireActivity() as MainActivity).showOptionsLayout()
-//            parentFragmentManager.beginTransaction().remove(this@MenuFragment).commit()
-
             val fragmentManager = parentFragmentManager
             fragmentManager.popBackStack()
         }

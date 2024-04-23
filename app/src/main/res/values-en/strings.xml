@@ -148,4 +148,6 @@
         <string name="symbol_format">%s %d</string>
     <string name="rightvalue">0</string>
         <string name="leftvalue">0</string>
+    <string name="escape">Побег...</string>
+    <string name="fight">В БОЙ!</string>
 </resources>
