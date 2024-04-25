@@ -12,8 +12,8 @@ android {
         applicationId = "com.pavlovalexey.torpedo"
         minSdk = 29
         targetSdk = 34
-        versionCode = 5
-        versionName = "0.05"
+        versionCode = 6
+        versionName = "0.06"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
