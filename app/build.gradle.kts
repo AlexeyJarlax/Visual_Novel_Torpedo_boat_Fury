@@ -38,7 +38,7 @@ android {
 
 dependencies {
 // Подключение расширений Kotlin для AndroidX Core
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
 // Использование библиотеки для совместимости с темами и стилями в старых версиях Android
     implementation("androidx.appcompat:appcompat:1.6.1")
 // Использование библиотеки ConstraintLayout для создания гибких макетов
@@ -72,7 +72,7 @@ dependencies {
 // Использование ViewModel из библиотеки Jetpack для управления данными в UI
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
 // Использование Kotlin Extensions для Activity
-    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("androidx.activity:activity-ktx:1.9.0")
 // Использование Koin для внедрения зависимостей в Android приложение
     implementation("io.insert-koin:koin-android:3.3.0")
 }

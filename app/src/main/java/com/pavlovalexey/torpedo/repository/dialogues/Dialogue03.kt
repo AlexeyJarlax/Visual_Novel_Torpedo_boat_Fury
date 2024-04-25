@@ -11,7 +11,7 @@ import com.pavlovalexey.torpedo.model.Resource
 object Dialogue03 {
 
     private var currentResource: Resource =
-        Resource(0, 0, 0, 0, 0, 1, 0, 0, 0)// Define currentResource
+        Resource(0, 0, 0, 0, 0, 1, 0, 0, 0)
 
     internal fun setCurrentResource(resource: Resource) {
         currentResource = resource

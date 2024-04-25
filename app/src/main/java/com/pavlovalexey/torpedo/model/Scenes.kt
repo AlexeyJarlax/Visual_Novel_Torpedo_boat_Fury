@@ -23,5 +23,7 @@ object Scenes {
         Scene(R.drawable.fale, "13"), // Провал
         Scene(R.drawable.cgakffdspb05, "14"), // сражение
         Scene(R.drawable.scen_ships05, "15"), // верблюд
+        Scene(R.drawable.storm, "16"), // фон шторм, дом и скала
+        Scene(R.drawable.port02, "17"), // Виго, Испания
     )
 }
