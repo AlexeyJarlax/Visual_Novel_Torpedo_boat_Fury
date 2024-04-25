@@ -1,16 +1,18 @@
 # Название.
-Визуальная новелла - Миноносец Яростный (Visual Novel - Torpedo boat Fury)
+  Визуальная новелла - Миноносец Яростный (Visual Novel - Torpedo boat Fury)
 
 # Обоснование причин разработки.
 1. Хочу и могу.
 2. Демонстрация возможности стека и разработчика.
 
+# Язык
+  Kotlin
+
 # Stack.
-1. Kotlin
-2. MVVM
-4. Koin
-5. SingleActivity + Fragments
-6. Retrofit, glide, json
+1. Архитектурный шаблон MVVM (Model-View-ViewModel)
+2. SingleActivity(+Fragments)
+3. Koin
+4. Jetpack Navigation Component.
 
 # Обоснование выбора стека.
 1. Разработчик владеет этими инструментами.
