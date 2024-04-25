@@ -20,8 +20,6 @@ import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Scenes
 
-
-
 /** ГЛАВА 0 ПРОЛОГ*/
 
 object Dialogue00 {

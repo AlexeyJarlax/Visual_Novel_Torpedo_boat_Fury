@@ -12,13 +12,6 @@ import com.pavlovalexey.torpedo.model.Resource
 
 object Dialogue01 {
 
-    private var currentResource: Resource =
-        Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)// Define currentResource
-
-    internal fun setCurrentResource(resource: Resource) {
-        currentResource = resource
-    }
-
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
 
         19 to Dialogue(

@@ -10,7 +10,7 @@ interface GameRepository {
     fun getDialogueByIndex(index: Int): Dialogue?
     fun getInitialScene(): Scene
     fun getResource(): Resource
-    fun updateResources(resourceEffect: Resource)
+    fun updateResources(resourceEffect: Resource) // сохраняем после ресурсЭффект
     fun getNextBookFragment(): String
     fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String)
 }

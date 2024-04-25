@@ -31,7 +31,6 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
         _currentScene.value = gameRepository.getInitialScene()
         _resources.value = resource // Using the passed resource
 
-        Dialogue01.setCurrentResource(resource)
         Dialogue03.setCurrentResource(resource)
         Dialogue07.setCurrentResource(resource)
     }
