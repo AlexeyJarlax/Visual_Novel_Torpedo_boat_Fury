@@ -24,4 +24,5 @@ Kotlin
 Сюжет от лица капитана миноносца повествует о событиях морского похода Второй тихоокеанской эскадры 1905 года, кульминацией которого стало Цусимское сражение.
 В игре будет несколько концовок, одна приближена к исторической и две - альтернативные истории на тему: _а что было бы, если..._.
 
-![alt text](https://github.com/AlexeyJarlax/Visual_Novel_Torpedo_boat_Fury/tree/dev/app/src/main/res/drawable/navgraf.JPG)
+![alt text](https://github.com/AlexeyJarlax/Visual_Novel_Torpedo_boat_Fury/blob/master/app/src/main/res/drawable/navgraf.JPG)
+
