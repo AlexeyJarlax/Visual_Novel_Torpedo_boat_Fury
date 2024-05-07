@@ -7,15 +7,19 @@ import com.pavlovalexey.torpedo.model.Characters.paramonov
 import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
+import com.pavlovalexey.torpedo.repository.GameRepository
+import org.koin.java.KoinJavaComponent
 
 /** ГЛАВА 1 ОТПЛЫТИЕ*/
 
 object Dialogue01 {
 
+    val repository: GameRepository by KoinJavaComponent.inject(GameRepository::class.java)
+
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
 
         19 to Dialogue(
-            text = "** ОТПЛЫТИЕ **",
+            text = "** ${repository.getResource()} ОТПЛЫТИЕ ${repository.getResource().rubles} **",
             scene = scenes[2],
             options = listOf()
         ),

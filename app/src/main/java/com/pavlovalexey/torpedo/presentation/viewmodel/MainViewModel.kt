@@ -1,5 +1,6 @@
 package com.pavlovalexey.torpedo.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,9 +12,9 @@ import com.pavlovalexey.torpedo.repository.dialogues.Dialogue01
 import com.pavlovalexey.torpedo.repository.dialogues.Dialogue03
 import com.pavlovalexey.torpedo.repository.dialogues.Dialogue07
 
-/** Стандартная вью модель с пробросом функций на RepositoryImpl через интерфейс. Схема активити - сингл + фрагменты Основные рвсчеты в GameRepositoryImpl*/
+/** Стандартная вью модель с пробросом функций на RepositoryImpl через интерфейс. Схема активити - сингл + фрагменты Основные расчеты в GameRepositoryImpl*/
 
-class MainViewModel(private val resource: Resource, val gameRepository: GameRepository) : ViewModel() {
+class MainViewModel(val gameRepository: GameRepository) : ViewModel() {
 
     private val _currentDialogueIndex = MutableLiveData(0)
     val currentDialogueIndex: LiveData<Int>
@@ -23,19 +24,18 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
     val currentScene: LiveData<Scene>
         get() = _currentScene
 
-    private val _resources = MutableLiveData<Resource>()
+    private val _resources = MutableLiveData(Resource(0,0,0,0,0,0,0,0,0))
     val resources: LiveData<Resource>
         get() = _resources
 
     init {
         _currentScene.value = gameRepository.getInitialScene()
-        _resources.value = resource // Using the passed resource
-
-        Dialogue03.setCurrentResource(resource)
-        Dialogue07.setCurrentResource(resource)
+        /*Dialogue03.setCurrentResource(_resources.value!!)*/
+        Dialogue07.setCurrentResource(_resources.value!!)
     }
 
     fun selectOption(optionIndex: Int) {
+        Log.d("===", "Main VM selectOption - optionIndex: $optionIndex")
         val currentDialogueIndex = _currentDialogueIndex.value ?: 0
         val selectedOption = gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
 
@@ -45,7 +45,7 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
 
         selectedOption?.let { option ->
             val resourceEffect = option.resourceEffect ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Ресурс по умолчанию
-
+            Log.d("===", "Main VM selectOption - resourceEffect: $resourceEffect")
             val currentResource = _resources.value ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
             _resources.value = Resource(
                 currentResource.rubles + resourceEffect.rubles,
@@ -58,7 +58,7 @@ class MainViewModel(private val resource: Resource, val gameRepository: GameRepo
                 currentResource.neisvestno + resourceEffect.neisvestno,
                 currentResource.relationship + resourceEffect.relationship
             )
-            gameRepository.updateResources(currentResource)
+            /*gameRepository.updateResources(currentResource)*/
             gameRepository.updateResources(option.resourceEffect ?: Resource(0, 0, 0, 0, 0, 0, 0, 0, 0))
             // Получаем следующую сцену для диалога
             val nextDialogueIndex = option.nextDialogueIndex
