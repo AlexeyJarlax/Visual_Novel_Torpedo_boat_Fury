@@ -3,11 +3,11 @@ package com.pavlovalexey.torpedo.repository
 /** основной блок логики сюжета Visual Novel Torpedo Boat Grozn*/
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.media.MediaPlayer
-import android.util.Log
+import com.google.gson.Gson
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Dialogue
-import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Scenes
@@ -19,7 +19,9 @@ class GameRepositoryImpl(
     private val context: Context
 ) : GameRepository {
 
-    //    private val scenes: List<Scene> = Scenes.list
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+        "game_data", Context.MODE_PRIVATE
+    )
     private var currentResource: Resource = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
     private val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
@@ -31,6 +33,7 @@ class GameRepositoryImpl(
 
     init {
         playMusic()
+        currentResource = loadResources()
     }
 
     override fun getInitialDialogue(): Dialogue {
@@ -45,6 +48,9 @@ class GameRepositoryImpl(
         return Scenes.list.firstOrNull()?.apply {
             lastUsedScene = this
         } ?: throw IllegalStateException("Сцены недоступны")
+    }
+
+    override fun setCurrentScene(scene: Scene) {
     }
 
     private val dialogues: List<Pair<Int, Dialogue>> = getDialogues(Scenes.list)
@@ -65,6 +71,7 @@ class GameRepositoryImpl(
             currentResource.neisvestno + resourceEffect.neisvestno,
             currentResource.relationship + resourceEffect.relationship
         )
+        saveResources(currentResource) // Сохраняем новое состояние ресурсов
     }
 
     override fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String) {
@@ -81,12 +88,9 @@ class GameRepositoryImpl(
                 val nextFragment = getNextBookFragment()
                 updateDialogueWithNextFragment(it, nextFragment)
             }
-            /* val resourceEffect = it.options.firstOrNull()?.resourceEffect
-             resourceEffect?.let { effect ->
-                 updateResources(effect)
-             }*/
             lastUsedScene = it.scene ?: lastUsedScene
-
+            setCurrentDialogueIndex(index) // Обновляем текущий индекс диалога
+            setCurrentScene(lastUsedScene ?: getInitialScene()) // Обновляем текущую сцену
         }
         return dialogue
     }
@@ -122,5 +126,31 @@ class GameRepositoryImpl(
     private fun playNextMusic() {
         currentMusicIndex = (currentMusicIndex + 1) % musicList.size
         playMusic()
+    }
+
+    override fun saveResources(resources: Resource) {
+        val editor = sharedPreferences.edit()
+        val json = Gson().toJson(resources)
+        editor.putString("resources", json)
+        editor.apply()
+    }
+
+    override fun loadResources(): Resource {
+        val json = sharedPreferences.getString("resources", null)
+        return if (json != null) {
+            Gson().fromJson(json, Resource::class.java)
+        } else {
+            Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Default resource values if not found
+        }
+    }
+
+    override fun setCurrentDialogueIndex(index: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt("current_dialogue_index", index)
+        editor.apply()
+    }
+
+    override fun loadCurrentDialogueIndex(): Int {
+        return sharedPreferences.getInt("current_dialogue_index", 0)
     }
 }

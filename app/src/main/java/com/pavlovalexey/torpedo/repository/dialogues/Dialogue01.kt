@@ -19,7 +19,7 @@ object Dialogue01 {
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
 
         19 to Dialogue(
-            text = "** ${repository.getResource()} ОТПЛЫТИЕ ${repository.getResource().rubles} **",
+            text = "** ${repository.getResource()} ОТПЛЫТИЕ ${repository.loadResources()} **",
             scene = scenes[2],
             options = listOf()
         ),
