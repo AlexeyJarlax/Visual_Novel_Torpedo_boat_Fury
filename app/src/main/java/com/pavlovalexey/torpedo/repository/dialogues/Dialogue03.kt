@@ -5,17 +5,14 @@ import com.pavlovalexey.torpedo.model.Characters.reztsov
 import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
+import com.pavlovalexey.torpedo.repository.GameRepository
+import org.koin.java.KoinJavaComponent.inject
 
 /** ГЛАВА 3 НЕОБЫЧНАЯ КНИГА: КАПИТАЛ*/
 
 object Dialogue03 {
 
-    private var currentResource: Resource =
-        Resource(0, 0, 0, 0, 0, 1, 0, 0, 0)
-
-    internal fun setCurrentResource(resource: Resource) {
-        currentResource = resource
-    }
+    val repository: GameRepository by inject(GameRepository::class.java)
 
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
         100 to Dialogue(
@@ -51,7 +48,7 @@ object Dialogue03 {
         105 to Dialogue(
             text = "Торговец открывает одну из полок его большого письменного стола ключом и достает толстую книгу, протягивая ее мне, так как я стоял ближе",
             scene = scenes[6],
-            options = if (currentResource.capital > 1) { // Проверяем значение
+            options = if (repository.getResource().capital > 1) { // Проверяем значение
                 listOf(
                     Option(
                         text = "Взглянув на обложку, разочарованно понимаю, что эту книгу я читал, и интереса она не представляет",
@@ -77,8 +74,7 @@ object Dialogue03 {
                 Option(
                     text = "Купить книгу (ВНИМАНИЕ! Добавление книги в коллекцию может создать альтернативную историю развития событий)",
                     nextDialogueIndex = 109,
-                    resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0),
-                    optionFunction = { currentResource.capital += 1 }
+                    resourceEffect = Resource(-149, 0, 0, 0, 0, 1, 0, 0, 0)
                 ),
                 Option(
                     text = "Отказаться от покупки",
@@ -103,7 +99,7 @@ object Dialogue03 {
         111 to Dialogue(
             text = "Конец дня, я могу уединиться в своей каюте и полистать одну из книг коллекции",
             scene = scenes[8],
-            options = if (currentResource.capital > 0) {
+            options = if (repository.getResource().capital > 0) {
                 listOf(
                     Option(
                         text = "(чтение книг происходит автоматически в конце главы, оно не влияет на сюжет и может быть пропущено)",

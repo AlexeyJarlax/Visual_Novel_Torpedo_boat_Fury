@@ -1,9 +1,10 @@
 package com.pavlovalexey.torpedo.repository
 
-/** основной блок кода сюжета Visual Novel "Torpedo Boat Grozny, содержащий в себе сцены, диалоги и прочие детали сюжета. Сюжет пишется только тут.*/
+/** основной блок логики сюжета Visual Novel Torpedo Boat Grozn*/
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.util.Log
 import com.pavlovalexey.torpedo.R
 import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
@@ -15,12 +16,11 @@ import com.pavlovalexey.torpedo.model.MusicList
 import com.pavlovalexey.torpedo.repository.dialogues.DialogueManager.getDialogues
 
 class GameRepositoryImpl(
-    private val context: Context,
-    private val initialResource: Resource
+    private val context: Context
 ) : GameRepository {
 
-//    private val scenes: List<Scene> = Scenes.list
-    private var currentResource: Resource = initialResource
+    //    private val scenes: List<Scene> = Scenes.list
+    private var currentResource: Resource = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
     private val bookText = context.getString(R.string.kapital)
     private var lastReadFragment: String = ""
     private var currentBookPosition: Int = 0
@@ -81,10 +81,10 @@ class GameRepositoryImpl(
                 val nextFragment = getNextBookFragment()
                 updateDialogueWithNextFragment(it, nextFragment)
             }
-            val resourceEffect = it.options.firstOrNull()?.resourceEffect
-            resourceEffect?.let { effect ->
-                updateResources(effect)
-            }
+            /* val resourceEffect = it.options.firstOrNull()?.resourceEffect
+             resourceEffect?.let { effect ->
+                 updateResources(effect)
+             }*/
             lastUsedScene = it.scene ?: lastUsedScene
 
         }
