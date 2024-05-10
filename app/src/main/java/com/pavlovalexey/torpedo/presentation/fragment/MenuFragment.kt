@@ -1,5 +1,6 @@
 package com.pavlovalexey.torpedo.presentation.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +14,14 @@ import com.pavlovalexey.torpedo.presentation.viewmodel.MenuViewModel
 /** фрагмент для верхнего меню игры. Содержит справку по ресурсам и события, кнопки*/
 
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.pavlovalexey.torpedo.presentation.viewmodel.MainViewModel
 
-class MenuFragment : Fragment() {
+class MenuFragment() : Fragment() {
 
-    private val viewModel: MenuViewModel by activityViewModels()
+    private val viewModel: MenuViewModel by viewModels()
+
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private fun toast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
@@ -47,7 +52,20 @@ class MenuFragment : Fragment() {
         }
 
         closeSaveButton.setOnClickListener {
-            toast("Вы нажали кнопку 'Закрыть + Сохранить Прогресс' Функция в разработке")
+            AlertDialog.Builder(requireContext())
+                .setTitle("Начать игру заново?")
+                .setMessage("Вы уверены, что хотите начать игру заново?")
+                .setPositiveButton("Да") { dialog, _ ->
+                    mainViewModel.gameRepository.clearSavedResources()
+                    mainViewModel.resetGame()
+                    mainViewModel.setCurrentDialogueIndex(0)
+                    dialog.dismiss()
+                    menuLayout.performClick()
+                }
+                .setNegativeButton("Нет") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
 
         menuLayout.setOnClickListener {

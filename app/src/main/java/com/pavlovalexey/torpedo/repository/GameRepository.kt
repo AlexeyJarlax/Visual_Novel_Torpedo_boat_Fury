@@ -13,4 +13,10 @@ interface GameRepository {
     fun updateResources(resourceEffect: Resource) // сохраняем после ресурсЭффект
     fun getNextBookFragment(): String
     fun updateDialogueWithNextFragment(dialogue: Dialogue, nextFragment: String)
+    fun saveResources(resources: Resource)
+    fun loadResources(): Resource
+    fun loadCurrentDialogueIndex(): Int
+    fun setCurrentDialogueIndex(index: Int)
+    fun setCurrentScene(scene: Scene)
+    fun clearSavedResources()
 }

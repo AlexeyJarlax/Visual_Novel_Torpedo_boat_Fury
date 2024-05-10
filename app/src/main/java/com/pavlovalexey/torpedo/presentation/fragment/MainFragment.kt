@@ -89,11 +89,36 @@ class MainFragment : Fragment() {
         mainViewModel.currentDialogueIndex.observe(viewLifecycleOwner, Observer { index ->
             updateUI(index)
         })
+
+        mainViewModel.initialResources.observe(viewLifecycleOwner, Observer { resources ->
+            // Инициализация представления с использованием начальных ресурсов
+            // Обновите интерфейс, используя загруженные ресурсы
+            rublesTextView.text = getString(R.string.currency_format, "₽", resources.rubles)
+            fameTextView.text = getString(R.string.symbol_format, "🏆", resources.fame)
+            teamLoyaltyTextView.text = getString(R.string.symbol_format, "🚩", resources.teamLoyalty)
+            vodkaTextView.text = getString(R.string.symbol_format, "🍶", resources.vodka)
+            maximTextView.text = getString(R.string.symbol_format, "💥", resources.maxim)
+            capitalTextView.text = getString(R.string.symbol_format, "☭", resources.capital)
+            necronomiconTextView.text = getString(R.string.symbol_format, "🐙", resources.necronomicon)
+
+            when (resources.relationship) {
+                -2 -> relationshipTextView.text = "😡"
+                -1 -> relationshipTextView.text = "😠"
+                0 -> relationshipTextView.text = ""
+                1 -> relationshipTextView.text = "🙂"
+                2 -> relationshipTextView.text = "😊"
+                else -> relationshipTextView.text = ""
+            }
+        })
     }
 
     private fun updateUI(currentDialogueIndex: Int) {
         val currentDialogue =
             mainViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
+
+        if (currentDialogueIndex == 0) {
+            mainViewModel.resetGame()
+        }
 
         val partsColon = currentDialogue.text?.split("::")
         val partsDash = currentDialogue.text?.split("--")

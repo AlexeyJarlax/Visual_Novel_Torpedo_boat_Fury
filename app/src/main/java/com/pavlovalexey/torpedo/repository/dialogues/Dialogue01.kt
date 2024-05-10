@@ -8,31 +8,39 @@ import com.pavlovalexey.torpedo.model.Dialogue
 import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.repository.GameRepository
+import com.pavlovalexey.torpedo.repository.dialogues.Dialogue00.repository
 import org.koin.java.KoinJavaComponent
 
 /** ГЛАВА 1 ОТПЛЫТИЕ*/
 
 object Dialogue01 {
 
-    val repository: GameRepository by KoinJavaComponent.inject(GameRepository::class.java)
+//    val repository: GameRepository by KoinJavaComponent.inject(GameRepository::class.java)
 
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
 
         19 to Dialogue(
-            text = "** ${repository.getResource()} ОТПЛЫТИЕ ${repository.getResource().rubles} **",
+            text = "** ОТПЛЫТИЕ ${repository.loadResources()} **",
             scene = scenes[2],
             options = listOf()
         ),
 
         20 to Dialogue(
-            text = "Со мной в одном рейсе оказался Алексей Новиков, служащий за снабжение с эскадренного броненосца «Орёл», разговорчивый батлер поделился с мнением о команде, " +
+            text = "${repository.loadResources()} Со мной в одном рейсе оказался Алексей Новиков, служащий за снабжение с эскадренного броненосца «Орёл», разговорчивый батлер поделился с мнением о команде, " +
                     "с которой мне придется управляться:",
             scene = scenes[2],
-            options = listOf()
+            options = listOf(
+                Option(
+                    text = "///",
+                    nextDialogueIndex = 21,
+                    optionFunction = { repository.clearSavedResources()},
+//                    resourceEffect = Resource(2000, 4, 0, 0, 0, 0, 0, 3, 0),
+                ),
+            )
         ),
 
         21 to Dialogue(
-            text = "$novikov::: Многие моряки на кораблях собраны из запаса. Эти старшие люди, неведомые к военно-морской службе, живут воспоминаниями о своей родине, болеют " +
+            text = "$novikov::: ${repository.loadResources()}Многие моряки на кораблях собраны из запаса. Эти старшие люди, неведомые к военно-морской службе, живут воспоминаниями о своей родине, болеют " +
                     "от разлуки с домом, с родными, с женою. Война обрушилась на них внезапно, как беда несмолкаемая, и они, готовясь к непривычному походу, выполняют свои обязанности с угнетенным видом...",
             scene = scenes[2],
             options = listOf()
