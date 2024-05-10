@@ -14,6 +14,7 @@ import com.pavlovalexey.torpedo.model.Scenes
 import com.pavlovalexey.torpedo.model.Music
 import com.pavlovalexey.torpedo.model.MusicList
 import com.pavlovalexey.torpedo.repository.dialogues.DialogueManager.getDialogues
+import com.pavlovalexey.torpedo.repository.dialogues.DialogueManager.loadDialogues
 
 class GameRepositoryImpl(
     private val context: Context
@@ -142,6 +143,15 @@ class GameRepositoryImpl(
         } else {
             Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Default resource values if not found
         }
+    }
+
+    override fun clearSavedResources() {
+        loadDialogues()
+        val editor = sharedPreferences.edit()
+        editor.remove("resources")
+        editor.apply()
+        currentResource = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0)
+        saveResources(Resource(0, 0, 0, 0, 0, 0, 0, 0, 0))
     }
 
     override fun setCurrentDialogueIndex(index: Int) {

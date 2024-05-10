@@ -8,6 +8,7 @@ import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.repository.GameRepository
 import com.pavlovalexey.torpedo.repository.dialogues.Dialogue07
+import com.pavlovalexey.torpedo.repository.dialogues.DialogueManager
 
 /** Стандартная вью модель с пробросом функций на RepositoryImpl через интерфейс. Схема активити - сингл + фрагменты Основные расчеты в GameRepositoryImpl*/
 
@@ -60,7 +61,7 @@ class MainViewModel(val gameRepository: GameRepository) : ViewModel() {
             gameRepository.getDialogueByIndex(currentDialogueIndex)?.options?.getOrNull(optionIndex)
 
         if (currentDialogueIndex == 0) {
-            resetResources()
+            resetGame()
         }
 
         selectedOption?.let { option ->
@@ -106,8 +107,10 @@ class MainViewModel(val gameRepository: GameRepository) : ViewModel() {
         }
     }
 
-    fun resetResources() {
+    fun resetGame() {
+        DialogueManager.loadDialogues()
         _resources.value = Resource(0, 0, 0, 0, 0, 0, 0, 0, 0) // Устанавливаем все ресурсы в ноль
+        gameRepository.clearSavedResources()
     }
 
     fun goToNextDialogue() {

@@ -18,4 +18,5 @@ interface GameRepository {
     fun loadCurrentDialogueIndex(): Int
     fun setCurrentDialogueIndex(index: Int)
     fun setCurrentScene(scene: Scene)
+    fun clearSavedResources()
 }

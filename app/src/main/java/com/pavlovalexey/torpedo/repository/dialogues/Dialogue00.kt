@@ -19,10 +19,14 @@ import com.pavlovalexey.torpedo.model.Option
 import com.pavlovalexey.torpedo.model.Resource
 import com.pavlovalexey.torpedo.model.Scene
 import com.pavlovalexey.torpedo.model.Scenes
+import com.pavlovalexey.torpedo.repository.GameRepository
+import org.koin.java.KoinJavaComponent
 
 /** ГЛАВА 0 ПРОЛОГ*/
 
 object Dialogue00 {
+
+    val repository: GameRepository by KoinJavaComponent.inject(GameRepository::class.java)
 
     internal val dialogues: List<Pair<Int, Dialogue>> = listOf(
         0 to Dialogue(
@@ -32,7 +36,8 @@ object Dialogue00 {
                 Option(
                     text = "Начать новую игру",
                     nextDialogueIndex = 1,
-                    resourceEffect = Resource(2000, 4, 0, 0, 0, 0, 0, 0, 0),
+                    optionFunction = { repository.clearSavedResources()},
+                    resourceEffect = Resource(2000, 4, 0, 0, 0, 0, 0, 3, 0),
                 ),
             )
         ),
@@ -107,7 +112,7 @@ object Dialogue00 {
             ),
         ),
         11 to Dialogue(
-            text = "${Characters.daria}::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание?",
+            text = "${Characters.daria}::: Спасибо, что напомнил мне об этом, свет очей моих... что еще скажешь на прощание? ${repository.loadResources()}",
             options = listOf(
                 Option(
                     text = "Думаю мне пора, возможно свидимся, дорогая...",

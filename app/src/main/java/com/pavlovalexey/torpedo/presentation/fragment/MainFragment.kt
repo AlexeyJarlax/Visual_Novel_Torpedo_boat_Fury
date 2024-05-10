@@ -117,7 +117,7 @@ class MainFragment : Fragment() {
             mainViewModel.gameRepository.getDialogueByIndex(currentDialogueIndex) ?: return
 
         if (currentDialogueIndex == 0) {
-            mainViewModel.resetResources()
+            mainViewModel.resetGame()
         }
 
         val partsColon = currentDialogue.text?.split("::")
